@@ -35,6 +35,11 @@ const int silver_gate = 15;
 const int gold_key = 19;
 const int silver_key = 20;
 
-//Stage 1 location
+//Input delay
+const int  Delay_Frame = 42; // 1000/24 = 42(ms) or 24 frames per sec
+
+
+//Player
+const int p_size = 48;
 
 #endif
