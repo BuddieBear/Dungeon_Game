@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
         SDL_RenderCopy(renderer, player_decal, NULL, &player_box);
         
         SDL_RenderPresent(renderer);
-        SDL_Delay(16);
+        SDL_Delay(10);
     }
     
     //end program
