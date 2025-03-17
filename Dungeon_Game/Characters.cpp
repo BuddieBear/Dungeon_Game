@@ -14,10 +14,19 @@ void Handle_Movement(bool& running, player_hitbox& player, const int &speed, vec
         }
     }
     const Uint8* keystates = SDL_GetKeyboardState(NULL);
-    if (keystates[SDL_SCANCODE_W]) Check_Collision(player,0,-speed,ColliderMap);
-    if (keystates[SDL_SCANCODE_S]) Check_Collision(player, 0, speed, ColliderMap);
-    if (keystates[SDL_SCANCODE_A]) Check_Collision(player, -speed, 0, ColliderMap);
-    if (keystates[SDL_SCANCODE_D]) Check_Collision(player, speed, 0, ColliderMap);
+
+    int speed_x =0, speed_y = 0;
+    if (keystates[SDL_SCANCODE_W]) speed_y = -speed;
+    if (keystates[SDL_SCANCODE_S]) speed_y = speed;
+    if (keystates[SDL_SCANCODE_A]) speed_x = -speed;
+    if (keystates[SDL_SCANCODE_D]) speed_x = speed;
+
+    if (speed_x != 0 && speed_y != 0) //diagonal ( A W)
+    {
+        speed_y *= 0.7071;
+        speed_x *= 0.7071;
+    }
+    Check_Collision(player,speed_x, speed_y, ColliderMap);
 }
 
 void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vector<int>>& ColliderMap)
