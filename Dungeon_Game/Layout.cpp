@@ -52,7 +52,7 @@ void GetStageArray(std::vector <std::vector<int>> &Stage, int n_map)
 
 void LoadTileTextures(SDL_Renderer* renderer, vector<SDL_Texture*> &TileTextures) 
 {
-    for (int i = 0; i < 21; i++) 
+    for (int i = 0; i < TileCount; i++) 
     {  
         string tile_file = "Map/Tiles/Tile_" + std::to_string(i + 1) + ".png";
         TileTextures[i] = LoadTexture(tile_file, renderer);

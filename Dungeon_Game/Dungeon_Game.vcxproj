@@ -134,7 +134,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Basis.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Characters.cpp" />
     <ClCompile Include="Layout.cpp" />
     <ClCompile Include="main.cpp" />
@@ -142,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Basis.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Layout.h" />
     <ClInclude Include="SDL_Utils.h" />

@@ -31,7 +31,9 @@ const int start_2_x = 0;
 const int start_2_y = 0;
 
 //Objectives decals
-const int gold_gate = 17;//decal num
+const int TileCount = 22;
+
+const int gold_gate = 17;
 const int silver_gate = 15; 
 const int gold_key = 19;
 const int silver_key = 20;

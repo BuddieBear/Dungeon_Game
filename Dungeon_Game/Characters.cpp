@@ -10,14 +10,15 @@ void bullet::render(SDL_Renderer* renderer, SDL_Rect Dest, SDL_Texture* Bullet_T
     
 }
 
-void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, SDL_Texture* Bullet_Texture,vector<vector<int>> ColliderMap, float delta)
+void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, SDL_Texture* Bullet_Texture,vector<vector<int>>& ColliderMap, float delta)
 {
     int mouseX, mouseY;
     static bool shooting = false;
     static bool OnCooldown = false;
-
+    static bool EmptyMag = false;
     static bool Updated_shot = true;
-    
+    static bool JustPress = false;
+
     static double acc_x;
     static double acc_y;
     
@@ -33,22 +34,44 @@ void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, S
 
     const int bullet_frame = 16; // 60fps
 
-    if (mouseButtons && OnCooldown == false &&SDL_BUTTON(SDL_BUTTON_LEFT))
+    if (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT) && !OnCooldown && !EmptyMag && !JustPress)
     {
-        OnCooldown = true;
+
         shot.x_dest = mouseX;
         shot.y_dest = mouseY;
         shooting = true;
         Updated_shot = false;
-        acc_x = SCREEN_WIDTH / 2 - TILE_SIZE/2;
-        acc_y = SCREEN_HEIGHT / 2 - TILE_SIZE/2;
-        
+        OnCooldown = true;
+        JustPress = true;
+
+        shot.ammo -= 1;
+
+        acc_x = SCREEN_WIDTH / 2 - TILE_SIZE / 2;
+        acc_y = SCREEN_HEIGHT / 2 - TILE_SIZE / 2;
     }
-    if (OnCooldown && currentTime > LastTimeShot + shot.Cooldown) //Allow to shoot
+    else
+    {
+        JustPress = false;
+    }
+
+    if (shot.ammo == 0)
+    {
+        EmptyMag = true;
+    }
+
+    if (OnCooldown && EmptyMag == false && currentTime > LastTimeShot + shot.Cooldown) //Allow to shoot with ammo
     {
         LastTimeShot = currentTime;
         OnCooldown = false;
     }
+
+    if (EmptyMag && currentTime > LastTimeShot + shot.ReloadTime)
+    {
+        LastTimeShot = currentTime;
+        EmptyMag = false;
+        shot.ammo = 6;
+    }
+
 
     if (shooting && !Updated_shot )
     {
@@ -73,7 +96,7 @@ void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, S
     shot.render(renderer, shot_hitbox, Bullet_Texture, shooting);
 }
 
-bool check_outofbound(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player_hitbox player, vector<vector<int>> ColliderMap)
+bool check_outofbound(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player_hitbox player, vector<vector<int>>& ColliderMap)
 {
     //Out of screen
     if (shot_hitbox.x > SCREEN_WIDTH || shot_hitbox.y > SCREEN_HEIGHT || shot_hitbox.x < 0 || shot_hitbox.y < 0)
@@ -84,11 +107,20 @@ bool check_outofbound(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player
     
     shot.x = player.x - (SCREEN_WIDTH / 2 - shot_hitbox.x);
     shot.y = player.y - (SCREEN_HEIGHT / 2 - shot_hitbox.y);
-    if (ColliderMap[shot.y / TILE_SIZE][shot.x / TILE_SIZE] == 1)
+
+    int tile_n = ColliderMap[shot.y / TILE_SIZE][shot.x / TILE_SIZE];
+    if ( tile_n == 1)
     {
         shooting = false;
         return true;
     }
+    else if (tile_n == 21)
+    {
+        ColliderMap[shot.y / TILE_SIZE][shot.x / TILE_SIZE] = 0;
+        shooting = false;
+        return true;
+    }
+
     return false;
 }
 
@@ -114,6 +146,7 @@ void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& playe
 
     SDL_Event event;
     bool Moving = false;
+
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
@@ -153,8 +186,8 @@ void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vect
     int new_x = player.x + x_plus;
     int new_y = player.y + y_plus;
     
-    new_x = new_x / TILE_SIZE -1;
-    new_y = new_y / TILE_SIZE -1;
+    new_x = new_x / TILE_SIZE ;
+    new_y = new_y / TILE_SIZE ;
 
     int tile_num = ColliderMap[new_y][new_x];
     
