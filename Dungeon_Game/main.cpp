@@ -13,21 +13,23 @@ int main(int argc, char* argv[])
     initSDL(window, renderer, Screen_Window);
 
     //Player
-    int p_speed = 3;
+    int p_speed = 3; // speed per every x ms
     int n = 0;
     player_hitbox player;
 
     //Texture for player
     SDL_Texture* player_decal = LoadTexture("Characters/Cowboy/Main.png", renderer);
     SDL_Rect player_box; // Always in the middlle of the screen
-    player_box.x = SCREEN_WIDTH/2 - p_size;
-    player_box.y = SCREEN_HEIGHT/2 - p_size;
+    player_box.x = SCREEN_WIDTH/2 - p_size/2;
+    player_box.y = SCREEN_HEIGHT/2 - p_size/ 2;
     player_box.w = p_size;
     player_box.h = p_size;
 
     vector<SDL_Texture*> Walking_anim;
     LoadAnimation(Walking_anim, renderer);
 
+    bullet player_shot;
+    SDL_Texture* Bullet_Texture = LoadTexture("Images/Bullet.png", renderer);
     //Load Texture for Stage
     vector<SDL_Texture*> Tile_Array(25);
     LoadTileTextures(renderer, Tile_Array);
@@ -43,21 +45,27 @@ int main(int argc, char* argv[])
     RenderStage(renderer, stage_1, player, Tile_Array);
     SDL_RenderPresent(renderer);
     SDL_Delay(500);
-
+    
+    Uint32 lastT = SDL_GetTicks();  // Stores the last frame time    
     //Start game
     bool running = true;
     while (running)
     {
+        //Setup delta time
+        Uint32 currentT = SDL_GetTicks();
+        float deltaTime = ((currentT - lastT) / 1000.0f)*75; // Convert to seconds
+        lastT = currentT;
+
         //The Stage
         RenderStage(renderer, stage_1, player, Tile_Array);
         RenderCollider(renderer, stage_1_collider, player, Tile_Array);
 
         //Character move
-        Handle_Movement(running, renderer, player, p_speed, stage_1_collider, Walking_anim);
-
+        Handle_Movement(running, renderer, player, p_speed, stage_1_collider, Walking_anim, deltaTime);
+        Shoot_bullets(renderer, player_shot, player, Bullet_Texture, stage_1_collider, deltaTime);
         //Update new frame
-        SDL_RenderPresent(renderer);
-        SDL_Delay(10);
+        SDL_Delay(6);
+        SDL_RenderPresent(renderer); 
         //Clear renderer
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);

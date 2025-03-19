@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <cmath>
 //SDL 2
 #include <SDL.h>
 #include <SDL_image.h>
@@ -23,8 +24,8 @@ const int SCREEN_HEIGHT = 720;
 const int TILE_SIZE = 32;
 
 //Start position
-const int start_1_x = 1830;
-const int start_1_y = 5270;
+const int start_1_x = 1800;
+const int start_1_y = 5230;
 
 const int start_2_x = 0;
 const int start_2_y = 0;

@@ -40,9 +40,7 @@ void GetStageArray(std::vector <std::vector<int>> &Stage, int n_map)
         default: break;
     }
         
-    
     Stage = LoadCSVMap(map_file);
-
     // Test array
     /*for (const auto& row : Stage) {
         for (int tile : row) {
