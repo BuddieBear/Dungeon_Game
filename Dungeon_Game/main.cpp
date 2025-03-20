@@ -12,14 +12,16 @@ int main(int argc, char* argv[])
     SDL_Surface* Screen_Window;
     initSDL(window, renderer, Screen_Window);
 
+    SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
     //Player
-    int p_speed = 5; // speed per every x ms
+    int p_speed = 300; // pixel per sec
     int n = 0;
     player_hitbox player;
 
     //Texture for player
     SDL_Texture* player_decal = LoadTexture("Characters/Cowboy/Main.png", renderer);
-    SDL_Rect player_box; // Always in the middlle of the screen
+    SDL_Rect player_box; // Always in the middle of the screen
     player_box.x = SCREEN_WIDTH/2 - p_size/2;
     player_box.y = SCREEN_HEIGHT/2 - p_size/ 2;
     player_box.w = p_size;
@@ -52,21 +54,18 @@ int main(int argc, char* argv[])
     while (running)
     {
         //Setup delta time
-        Uint32 currentT = SDL_GetTicks();
-        float deltaTime = ((currentT - lastT) / 1000.0f)*60; // Convert to seconds
-        lastT = currentT;
+        float deltaTime = (16/1000.0f); // 60 fps
 
         //The Stage
         RenderStage(renderer, stage_1, player, Tile_Array);
         RenderCollider(renderer, stage_1_collider, player, Tile_Array);
 
         //Bullet
-        Shoot_bullets(renderer, player_shot, player, Bullet_Texture, stage_1_collider, deltaTime);
+        Shoot_bullets(renderer, player_shot, player, Bullet_Texture, stage_1_collider, deltaTime, camera);
         //Character move
-        Handle_Movement(running, renderer, player, p_speed, stage_1_collider, Walking_anim, deltaTime);
-
+        SDL_Delay(8);
+        Handle_Movement(running, renderer, player, p_speed, stage_1_collider, Walking_anim, deltaTime, camera);
         //Update new frame
-        SDL_Delay(16);
         SDL_RenderPresent(renderer); 
         //Clear renderer
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

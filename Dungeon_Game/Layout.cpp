@@ -97,8 +97,8 @@ void RenderCollider(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileM
     destRect.w = TILE_SIZE;
     destRect.h = TILE_SIZE;
     //Top-left cord
-    int x0 = (player.x - SCREEN_WIDTH / 2) / TILE_SIZE;
-    int y0 = (player.y - SCREEN_HEIGHT / 2) / TILE_SIZE;
+    int x0 = (player.x - SCREEN_WIDTH / 2) / TILE_SIZE ;
+    int y0 = (player.y - SCREEN_HEIGHT / 2) / TILE_SIZE ;
 
     //Res 800x600
     for (int y = 0; y < SCREEN_HEIGHT / TILE_SIZE + 1; y++)  // only need to render 25 width x 20 height

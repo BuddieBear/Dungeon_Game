@@ -37,10 +37,11 @@ const int gold_gate = 17;
 const int silver_gate = 15; 
 const int gold_key = 19;
 const int silver_key = 20;
+const int box = 21;
 
-//Input delay
-const int  Delay_Frame = 42; // 1000/24 = 42(ms) or 24 frames per sec
-
+//Animation timing
+const int Delay_Frame = 42; // 1000/24 = 42(ms) or 24 fps
+const int bullet_frame = 16; // 60fps
 
 //Player
 const int p_size = 48;
