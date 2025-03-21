@@ -3,6 +3,8 @@
 
 #include "Basis.h"
 #include "SDL_Utils.h"
+#include "Turrets.h"
+
 
 struct player_hitbox
 {
@@ -14,13 +16,14 @@ struct player_hitbox
     }
 };
 
-struct bullet
+struct revolver
 {
-    int x_dest, y_dest; // Destination Rendered on Screen
-    int x, y; // Location on the World map
-    double angle; // Angle between ( (x, y)-> (Width/2 , Height/2) ) to  | (clockwise)
+    int x_dest =0, y_dest =0; // Destination Rendered on Screen
+    int x =0, y =0; // Map location
+
+    double angle =0; // Angle between ( (Width/2 , Height/2) -> (x, y)  ) to  Ox (clockwise)
     double speed = 2000;
-    double x_speed, y_speed;
+    double x_speed =0, y_speed =0;
 
     int Cooldown = 500;
     int ReloadTime = 1500;
@@ -34,13 +37,13 @@ struct bullet
 bool CheckCollisionRect(const SDL_Rect& a, const SDL_Rect& b);
 
 //Bullets
-void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, SDL_Texture* Bullet_Texture, vector<vector<int>>& ColliderMap, float delta, SDL_Rect camera);
-bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player_hitbox player, vector<vector<int>> & ColliderMap);
-bool Check_Surrounding_Bullet(bullet shot, int n_decal, int a, int b, vector<vector<int>>& ColliderMap);
+void Shoot_bullets(SDL_Renderer* renderer, revolver& shot, player_hitbox player, SDL_Texture* Bullet_Texture, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, float delta, SDL_Rect camera);
+bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, revolver& shot, player_hitbox player, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation);
+bool Check_Surrounding_Bullet(revolver shot, int n_decal, int a, int b, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation);
 
 //Main Characters
 void LoadAnimation(vector<SDL_Texture*>& Animation_pack, SDL_Renderer* renderer);
-void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& player, const int& speed, vector <vector<int>>& ColliderMap, vector <SDL_Texture*> Animation, float delta, SDL_Rect& camera);
+void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& player, const int& speed, vector <vector<int>>& ColliderMap, vector <SDL_Texture*> Animation, float delta, SDL_Rect& camera, bool& player_alive);
 void RenderCharacter(vector < SDL_Texture*> Animation, SDL_Renderer* renderer, int CurrentFrame, bool FaceRight);
-void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera);
+void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera, bool& player_alive);
 #endif 

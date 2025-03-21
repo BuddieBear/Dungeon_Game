@@ -2,26 +2,26 @@
 
 
 
-std::vector<std::vector<int>> LoadCSVMap(const std::string& filename) 
+vector<vector<int>> LoadCSVMap(const std::string& filename) 
 {
-    std::vector<std::vector<int>> map;
-    std::ifstream file(filename);
+    vector<vector<int>> map;
+    ifstream file(filename);
 
     if (!file.is_open())
     {
         logSDLError(cerr, "Failed to open CSV map: " + filename);
     }
     
-    std::string line;
-    while (std::getline(file, line)) 
+    string line;
+    while (getline(file, line)) 
     {
-        std::vector<int> row;
-        std::stringstream ss(line); // using string as input
-        std::string cell;
+        vector<int> row;
+        stringstream ss(line); // using string as input
+        string cell;
 
-        while (std::getline(ss, cell, ',')) 
+        while (getline(ss, cell, ',')) 
         {
-            row.push_back(std::stoi(cell)); // map[i] = row
+            row.push_back(stoi(cell)); // map[i] = row
         }
 
         map.push_back(row); // insert new row
@@ -30,7 +30,7 @@ std::vector<std::vector<int>> LoadCSVMap(const std::string& filename)
     return map;
 }
 
-void GetStageArray(std::vector <std::vector<int>> &Stage, int n_map)
+void GetStageArray(vector <vector<int>> &Stage, int n_map)
 {
     string map_file;
     switch (n_map)
@@ -54,14 +54,14 @@ void LoadTileTextures(SDL_Renderer* renderer, vector<SDL_Texture*> &TileTextures
 {
     for (int i = 0; i < TileCount; i++) 
     {  
-        string tile_file = "Map/Tiles/Tile_" + std::to_string(i + 1) + ".png";
+        string tile_file = "Map/Tiles/Tile_" + to_string(i + 1) + ".png";
         TileTextures[i] = LoadTexture(tile_file, renderer);
         cerr << tile_file << endl;
 
     }
 }
 
-void RenderStage(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileMap, player_hitbox player, const vector<SDL_Texture*> &TileTextures)
+void RenderStage(SDL_Renderer* renderer, vector<vector<int>>& tileMap, player_hitbox player, const vector<SDL_Texture*> &TileTextures)
 {
     
     SDL_Rect destRect;
@@ -89,7 +89,7 @@ void RenderStage(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileMap,
     }
 }
 
-void RenderCollider(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileMap, player_hitbox player, const vector<SDL_Texture*>& TileTextures)
+void RenderCollider(SDL_Renderer* renderer, vector<vector<int>>& tileMap, player_hitbox player, const vector<SDL_Texture*>& TileTextures)
 {
 
     SDL_Rect destRect;

@@ -2,7 +2,7 @@
 
 
 //Bullets
-void bullet::render(SDL_Renderer* renderer, SDL_Rect Dest, SDL_Texture* Bullet_Texture, bool shooting)
+void revolver::render(SDL_Renderer* renderer, SDL_Rect Dest, SDL_Texture* Bullet_Texture, bool shooting)
 {
     //  Add condition that it is still shooting
     if (shooting)
@@ -13,7 +13,7 @@ void bullet::render(SDL_Renderer* renderer, SDL_Rect Dest, SDL_Texture* Bullet_T
     
 }
 
-void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, SDL_Texture* Bullet_Texture,vector<vector<int>>& ColliderMap, float delta, SDL_Rect camera)
+void Shoot_bullets(SDL_Renderer* renderer, revolver& shot, player_hitbox player, SDL_Texture* Bullet_Texture,vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, float delta, SDL_Rect camera)
 {
     int mouseX, mouseY;
     static bool shooting = false;
@@ -84,7 +84,7 @@ void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, S
     shot_hitbox.x = shot.x - camera.x;
     shot_hitbox.y = shot.y - camera.y;
 
-    if ((shooting && currentTime > LastTimeRender + bullet_frame) && !Check_BulletHit(shooting, shot_hitbox, shot, player, ColliderMap) )
+    if ((shooting && currentTime > LastTimeRender + bullet_frame) && !Check_BulletHit(shooting, shot_hitbox, shot, player, ColliderMap, TurretWallLocation) )
     {
         shot.x += shot.x_speed;
         shot.y += shot.y_speed;
@@ -94,7 +94,7 @@ void Shoot_bullets(SDL_Renderer* renderer, bullet& shot, player_hitbox player, S
     shot.render(renderer, shot_hitbox, Bullet_Texture, shooting);
 }
 
-bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player_hitbox player, vector<vector<int>>& ColliderMap)
+bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, revolver& shot, player_hitbox player, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation)
 {
     //Out of screen
     if (shot_hitbox.x > SCREEN_WIDTH || shot_hitbox.y > SCREEN_HEIGHT || shot_hitbox.x < 0 || shot_hitbox.y < 0)
@@ -102,10 +102,7 @@ bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player_
         shooting = false;
         return true;
     }
-    
-    //shot.x = player.x - (SCREEN_WIDTH / 2 - shot_hitbox.x); // In the middle of the Rect
-    //shot.y = player.y - (SCREEN_HEIGHT / 2 - shot_hitbox.y);
-
+   
     int a = shot.x / TILE_SIZE;
     int b = shot.y / TILE_SIZE;
 
@@ -117,7 +114,7 @@ bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player_
         shooting = false;
         return true;
     }
-    else if (Check_Surrounding_Bullet(shot, box, a, b, ColliderMap) )// Destructible box
+    else if (Check_Surrounding_Bullet(shot, box, a, b, ColliderMap, TurretWallLocation) || Check_Surrounding_Bullet(shot, wall_turret_1, a, b, ColliderMap, TurretWallLocation) || Check_Surrounding_Bullet(shot, wall_turret_2, a, b, ColliderMap, TurretWallLocation))// Destructible box
     {
         shooting = false;
         return true;
@@ -129,24 +126,106 @@ bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, bullet& shot, player_
 
 
 }
-
-bool Check_Surrounding_Bullet(bullet shot, int n_decal, int a, int b, vector<vector<int>>& ColliderMap)
+bool Check_Surrounding_Bullet(revolver shot, int n_decal, int a, int b, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation)
 {
     SDL_Rect TempTile = { 0, 0, TILE_SIZE, TILE_SIZE };
+    SDL_Rect shot_hitbox = { shot.x - TILE_SIZE / 2, shot.y - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE };
 
-    SDL_Rect shot_hitbox = { shot.x - TILE_SIZE / 2,shot.y - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE };
+    int mapHeight = ColliderMap.size();
+    int mapWidth = ColliderMap[0].size();
 
     for (int i = -1; i <= 1; i++)
     {
         for (int k = -1; k <= 1; k++)
         {
-            if (ColliderMap[b + i][a + k] == n_decal )
+            int checkX = a + k;
+            int checkY = b + i;
+
+            // Prevent out-of-bounds access
+            if (checkX < 0 || checkY < 0 || checkX >= mapWidth || checkY >= mapHeight)
+                continue;
+
+            if (ColliderMap[checkY][checkX] == n_decal)
             {
-                TempTile.x = (a + k) * TILE_SIZE;
-                TempTile.y = (b + i) * TILE_SIZE;
-                if (CheckCollisionRect(shot_hitbox, TempTile) )
+                TempTile.x = checkX * TILE_SIZE;
+                TempTile.y = checkY * TILE_SIZE;
+
+                if (CheckCollisionRect(shot_hitbox, TempTile))
                 {
-                    ColliderMap[b + i][a + k] = 0;
+                    if (n_decal == wall_turret_2 || n_decal == wall_turret_1) // if hit wall
+                    {
+                        for (auto& turret : TurretWallLocation) // Check Health
+                        {
+                            if (turret.x  == checkX && turret.y  == checkY) // find it in the TurretWallLocation
+                            {
+                                if (turret.health == 1)
+                                {
+                                    ColliderMap[checkY][checkX] = 0;
+                                    turret.health = 0;
+                                    //Destroing Ajacent FireWalls
+                                        //Up
+                                    for (int i = checkY-1; i >= 0; i--)
+                                    {
+                                        if (ColliderMap[i][checkX] == wall_fire)
+                                        {
+                                            ColliderMap[i][checkX] = 0;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                        //Down
+                                    for (int i = checkY + 1; i < mapHeight; i++)
+                                    {
+                                        if (ColliderMap[i][checkX] == wall_fire)
+                                        {
+                                            ColliderMap[i][checkX] = 0;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                        //Left
+                                    for (int k = checkX - 1; k >= 0; k--)
+                                    {
+                                        if (ColliderMap[checkY][k] == wall_fire)
+                                        {
+                                            ColliderMap[checkY][k] = 0;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                        //Right
+                                    for (int k = checkX + 1; k < mapWidth; k++)
+                                    {
+                                        if (ColliderMap[checkY][k] == wall_fire)
+                                        {
+                                            ColliderMap[checkY][k] = 0;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    cerr << "Turret was destroyed" << endl;
+                                }
+                                else if (turret.health == 2)
+                                {
+                                    cerr << "Damaged" << endl;
+                                    turret.health = 1;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ColliderMap[checkY][checkX] = 0;
+                    }
                     return true;
                 }
             }
@@ -175,7 +254,7 @@ void LoadAnimation(vector<SDL_Texture*>& Animation_pack, SDL_Renderer* renderer)
     }
 }
 
-void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& player, const int &speed, vector <vector<int>>& ColliderMap, vector<SDL_Texture*> Animation, float delta, SDL_Rect& camera)
+void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& player, const int &speed, vector <vector<int>>& ColliderMap, vector<SDL_Texture*> Animation, float delta, SDL_Rect& camera, bool& player_alive)
 {
     int Cycle_Frame = 8; // 8 images
     static Uint32 LastFrame =0; // Track time for animation
@@ -207,7 +286,7 @@ void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& playe
         speed_y *= 0.7071;
         speed_x *= 0.7071;
     }
-    Check_Collision(player,speed_x, speed_y, ColliderMap, camera);
+    Check_Collision(player,speed_x, speed_y, ColliderMap, camera, player_alive);
 
     //Animation (24 fps) 
     Uint32 currentTime = SDL_GetTicks(); 
@@ -220,13 +299,13 @@ void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& playe
     RenderCharacter(Animation, renderer, CurrentFrame, Right);
 }
 
-void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera)
+void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera, bool& player_alive)
 {
     int new_x = player.x + x_plus;
     int new_y = player.y + y_plus;
     
-    new_x = new_x / TILE_SIZE -1 ;
-    new_y = new_y / TILE_SIZE -1 ;
+    new_x = new_x / TILE_SIZE  ;
+    new_y = new_y / TILE_SIZE  ;
 
     int tile_num = ColliderMap[new_y][new_x];
     
@@ -260,6 +339,10 @@ void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vect
                 }
             }
         }
+    }
+    else if (tile_num == wall_fire)
+    {
+        player_alive = false;
     }
     else { return; }
 

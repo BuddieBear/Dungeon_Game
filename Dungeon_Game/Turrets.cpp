@@ -1,0 +1,92 @@
+#include "Turrets.h"
+
+void Store_Turret_Wall_Location(vector<Turret_Wall>& Wall_Turrets, vector<vector<int>> ColliderMap)
+{
+    int n_rows = ColliderMap.size();
+    int n = ColliderMap[0].size();
+
+    
+    for (int i =0; i < n_rows; i++) 
+    {
+        for (int k =0; k < n; k++) 
+        {
+            if (ColliderMap[i][k] == wall_turret_2)
+            {
+                Turret_Wall newTurret;
+
+                newTurret.x = k;
+                newTurret.y = i;
+                newTurret.health = 2;
+                Wall_Turrets.push_back(newTurret);
+            }
+            else if (ColliderMap[i][k] == wall_turret_1)
+            {
+                Turret_Wall newTurret;
+
+                newTurret.x = k;
+                newTurret.y = i;
+                newTurret.health = 1;
+                Wall_Turrets.push_back(newTurret);
+            }
+        }
+    }
+}
+
+
+void Turret_Connect(SDL_Rect camera, vector<vector<int>>& ColliderMap)
+{
+    int x0 = camera.x / TILE_SIZE;
+    int y0 = camera.y / TILE_SIZE;
+    int mapHeight = ColliderMap.size();
+    int mapWidth = ColliderMap[0].size();
+
+    for (int y = 0; y < SCREEN_HEIGHT / TILE_SIZE; y++)
+    {
+        for (int x = 0; x < SCREEN_WIDTH / TILE_SIZE; x++)
+        {
+            int gridX = x + x0;
+            int gridY = y + y0;
+
+            // Ensure within bounds
+            if (gridY >= mapHeight || gridX >= mapWidth) continue;
+
+            // If turret is found, check for connections
+            if (ColliderMap[gridY][gridX] == wall_turret_1 || ColliderMap[gridY][gridX] == wall_turret_2)
+            {
+                int turretType = ColliderMap[gridY][gridX];  // Save turret type
+
+                // 1) Check Down for another turret
+                for (int i = gridY + 1; i < mapHeight; i++)
+                {
+                    if (ColliderMap[i][gridX] == turretType)  // Another turret found
+                    {
+                        cerr << "Connected Down!" << endl;
+                        // Fill the space in between with wall_fire
+                        for (int j = gridY + 1; j < i; j++)
+                        {
+                            ColliderMap[j][gridX] = wall_fire;
+                        }
+                        break;
+                    }
+                    if (ColliderMap[i][gridX] != 0) break; // Stop if blocked
+                }
+
+                // 2) Check Right for another turret
+                for (int k = gridX + 1; k < mapWidth; k++)
+                {
+                    if (ColliderMap[gridY][k] == turretType)  // Another turret found
+                    {
+                        cerr << "Connected Right!" << endl;
+                        // Fill the space in between with wall_fire
+                        for (int j = gridX + 1; j < k; j++)
+                        {
+                            ColliderMap[gridY][j] = wall_fire;
+                        }
+                        break;
+                    }
+                    if (ColliderMap[gridY][k] != 0) break; // Stop if blocked
+                }
+            }
+        }
+    }
+}

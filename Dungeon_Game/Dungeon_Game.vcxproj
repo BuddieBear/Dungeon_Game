@@ -138,12 +138,14 @@
     <ClCompile Include="Layout.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SDL_Utils.cpp" />
+    <ClCompile Include="Turrets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Basis.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Layout.h" />
     <ClInclude Include="SDL_Utils.h" />
+    <ClInclude Include="Turrets.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
