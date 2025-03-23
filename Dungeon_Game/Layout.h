@@ -2,7 +2,7 @@
 #define LAYOUT_H_
 
 #include "Basis.h"
-#include "Characters.h"
+#include "Character.h"
 #include "SDL_Utils.h"
 
 std::vector<std::vector<int>> LoadCSVMap(const std::string& filename);

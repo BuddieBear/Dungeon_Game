@@ -17,7 +17,7 @@ void initSDL(SDL_Window*& window, SDL_Renderer*& renderer, SDL_Surface*& surface
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
         logSDLError(std::cerr, "SDL_Init", true);
 
-    window = SDL_CreateWindow("Animation Test", SDL_WINDOWPOS_CENTERED,
+    window = SDL_CreateWindow("Soul Noob (Dungeon game)", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
 
@@ -59,4 +59,12 @@ SDL_Texture* LoadTexture(const std::string imgfile, SDL_Renderer* renderer)
         return nullptr;
     }
     return Loaded_Texture;
+}
+
+bool CheckCollisionRect(const SDL_Rect& a, const SDL_Rect& b)
+{
+    return (a.x < b.x + b.w && // so sanh _-
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h && // so sanh  ||
+        a.y + a.h > b.y);
 }

@@ -33,7 +33,7 @@ const int start_2_x = 0;
 const int start_2_y = 0;
 
 //Objectives decals
-const int TileCount = 25;
+const int TileCount = 27;
 
 const int gold_gate = 17;
 const int silver_gate = 15; 
@@ -43,6 +43,9 @@ const int box = 21;
 const int wall_turret_1 = 22;
 const int wall_turret_2 = 23;
 const int wall_fire = 24;
+const int laser_turret_1 = 25;
+const int laser_turret_2 = 26;
+
 //Animation timing
 const int Delay_Frame = 42; // 1000/24 = 42(ms) or 24 fps
 const int bullet_frame = 16; // 60fps

@@ -55,9 +55,8 @@ void LoadTileTextures(SDL_Renderer* renderer, vector<SDL_Texture*> &TileTextures
     for (int i = 0; i < TileCount; i++) 
     {  
         string tile_file = "Map/Tiles/Tile_" + to_string(i + 1) + ".png";
-        TileTextures[i] = LoadTexture(tile_file, renderer);
+        TileTextures.push_back(LoadTexture(tile_file, renderer));
         cerr << tile_file << endl;
-
     }
 }
 
@@ -81,7 +80,7 @@ void RenderStage(SDL_Renderer* renderer, vector<vector<int>>& tileMap, player_hi
             destRect.x = x * TILE_SIZE;
             destRect.y = y * TILE_SIZE;
 
-            if (SDL_RenderCopy(renderer, TileTextures[ tileMap[y+y0][x+x0]%25 ], NULL, &destRect) != 0)
+            if (SDL_RenderCopy(renderer, TileTextures[ tileMap[y+y0][x+x0]% TileCount ], NULL, &destRect) != 0)
             {
                 logSDLError(cerr, "Cannot Render tileset: " );
             }
@@ -111,7 +110,7 @@ void RenderCollider(SDL_Renderer* renderer, vector<vector<int>>& tileMap, player
                 destRect.x = x * TILE_SIZE;
                 destRect.y = y * TILE_SIZE;
 
-                if (SDL_RenderCopy(renderer, TileTextures[tileMap[y + y0][x + x0] % 25], NULL, &destRect) != 0)
+                if (SDL_RenderCopy(renderer, TileTextures[tileMap[y + y0][x + x0] % TileCount], NULL, &destRect) != 0)
                 {
                     logSDLError(cerr, "Cannot Render tileset: ");
                 }

@@ -24,13 +24,19 @@
     <ClCompile Include="Basis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Characters.cpp">
+    <ClCompile Include="Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Layout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Turrets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRunner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,13 +47,19 @@
     <ClInclude Include="Basis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Characters.h">
+    <ClInclude Include="Character.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Layout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Turrets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
