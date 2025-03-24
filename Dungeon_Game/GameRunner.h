@@ -5,6 +5,8 @@
 #include "Character.h"
 #include "Layout.h"
 #include "Turrets.h"
+#include "Minions.h"
+
 
 class RunStage1 
 {
@@ -14,8 +16,8 @@ private:
     SDL_Surface* Screen_Window;
     SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
-    // character player;
-    int p_speed = 250;
+    // character player
+    int p_speed = 300;
     int player_hp = 10;
     bool player_alive = true;
     bool running = true;
@@ -27,11 +29,16 @@ private:
     SDL_Texture* Bullet_Texture;
     vector<SDL_Texture*> Walking_anim;
 
-    //Layout1 map;
+    //Layout1 map
     vector<SDL_Texture*> Tile_Array;
     vector<vector<int>> stage_1, stage_1_collider;
     vector<Turret_Wall> Turret_Wall_location;
     vector<Turret_Laser> Turret_Laser_location;
+    SDL_Texture* Laser_Texture;
+
+    //Ghost
+    SDL_Texture* GhostImg;
+    ghost KillGhost;
 public:
     RunStage1();
     void RunGame();

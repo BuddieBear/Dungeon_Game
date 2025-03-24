@@ -67,7 +67,7 @@ void Shoot_bullets(SDL_Renderer* renderer, revolver& shot, player_hitbox player,
     {
         LastTimeShot = currentTime;
         EmptyMag = false;
-        shot.ammo = shot.MaxAmmo;
+        shot.ammo = shot.MaxAmmo;   
     }
 
 

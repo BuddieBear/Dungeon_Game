@@ -19,7 +19,11 @@ RunStage1::RunStage1()
     // Turrets
     Store_Turret_Wall_Location(Turret_Wall_location, stage_1_collider);
     Store_Turret_Laser_Location(Turret_Laser_location, stage_1_collider);
+    Laser_Texture = LoadTexture("Images/Laser.png", renderer);
+    //Ghost
+    GhostImg = LoadTexture("Characters/Ghost/Ghost.png", renderer);
 
+    KillGhost.ghostInit(start_1_x + 400, start_1_y + 600, GhostImg, camera);
     RenderStage(renderer, stage_1, player, Tile_Array);
     SDL_RenderPresent(renderer);
     SDL_Delay(500);
@@ -46,8 +50,15 @@ void RunStage1::RunGame()
         Shoot_bullets(renderer, player_shot, player, Bullet_Texture, stage_1_collider, Turret_Wall_location, Turret_Laser_location, deltaTime, camera);
         Handle_Movement(running, renderer, player, p_speed, stage_1_collider, Walking_anim, deltaTime, camera, player_alive);
         Turret_Connect(camera, stage_1_collider);
-        All_Turret_Shoot(renderer, camera, Turret_Laser_location, stage_1_collider, Bullet_Texture, deltaTime, player_box, player_alive, player_hp);
+        All_Turret_Shoot(renderer, camera, Turret_Laser_location, stage_1_collider, Laser_Texture, deltaTime, player_box, player_alive, player_hp);
 
+        if (!KillGhost.HitPlayer(player_box, camera))
+        {
+            KillGhost.Move(renderer, player_box, camera, deltaTime);
+            KillGhost.Render(renderer, camera);
+        }
+        else { player_alive = false; cerr << "BOO! >:)"; }
+            
         SDL_RenderPresent(renderer);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);

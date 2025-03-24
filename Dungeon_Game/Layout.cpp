@@ -19,7 +19,7 @@ vector<vector<int>> LoadCSVMap(const std::string& filename)
         stringstream ss(line); // using string as input
         string cell;
 
-        while (getline(ss, cell, ',')) 
+        while (getline(ss, cell, ';')) 
         {
             row.push_back(stoi(cell)); // map[i] = row
         }
