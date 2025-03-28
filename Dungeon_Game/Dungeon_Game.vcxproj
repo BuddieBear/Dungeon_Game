@@ -135,6 +135,10 @@
   <ItemGroup>
     <ClCompile Include="Basis.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameUI.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MainMenu.h" />
     <ClCompile Include="TurretManager.cpp" />
     <ClCompile Include="GameRunner.cpp" />
     <ClCompile Include="GameLayout.cpp" />
@@ -146,6 +150,8 @@
   <ItemGroup>
     <ClInclude Include="Basis.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameUI.h" />
     <ClInclude Include="TurretManager.h" />
     <ClInclude Include="GameRunner.h" />
     <ClInclude Include="GameLayout.h" />

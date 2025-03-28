@@ -40,12 +40,10 @@ void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& Collid
         Updated_shot = false;
         OnCooldown = true;
 
-        ammo -= 1;
 
         this ->x = camera.x + SCREEN_WIDTH/2 - TILE_SIZE/2;
         this ->y = camera.y + SCREEN_HEIGHT/2 - TILE_SIZE/2;
     }
-
 
     if (ammo == 0)
     {
@@ -65,15 +63,18 @@ void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& Collid
         ammo = MaxAmmo;   
     }
 
-
-    if (shooting && !Updated_shot )
+    if (shooting && !Updated_shot)
     {
-        angle = atan2((float) this->y_dest - SCREEN_HEIGHT / 2, (float) this->x_dest - SCREEN_WIDTH / 2);
-        this ->x_speed = (double) speed * cos(angle) * delta;
-        this ->y_speed = (double) speed * sin(angle) * delta;
+        angle = atan2((float)this->y_dest - SCREEN_HEIGHT / 2, (float)this->x_dest - SCREEN_WIDTH / 2);
+        this->x_speed = (double)speed * cos(angle) * delta;
+        this->y_speed = (double)speed * sin(angle) * delta;
         Updated_shot = true;
-    }
 
+        if (ammo > 0)
+        {
+            ammo -= 1;
+        }
+    }
 
     //Animation
     shot_hitbox.x = this ->x - camera.x;
@@ -337,6 +338,7 @@ void Player::Check_Collision( int x_plus, int y_plus, vector <vector<int>>& Coll
     else if (tile_num == victory_crown)
     {
         cerr << "YOU WON";
+        this->win = true;
         this->alive = false;
     }
     else if (tile_num == gold_key)
@@ -385,6 +387,7 @@ void Player::Check_Collision( int x_plus, int y_plus, vector <vector<int>>& Coll
         else if (odd == 2)
         {
             cerr << "Reward: 20Hp" <<endl;
+            this->MaxHp = 20;
             this->hp = 20;
         }
         else

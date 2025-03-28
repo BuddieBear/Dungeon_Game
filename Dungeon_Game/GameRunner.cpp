@@ -1,8 +1,7 @@
 #include "GameRunner.h"
 
-RunStage1::RunStage1()
+RunStage1::RunStage1(SDL_Renderer* renderer)
 {
-    initSDL(window, renderer, Screen_Window);
 
     // Player - class
     player.x = start_1_x;
@@ -22,6 +21,10 @@ RunStage1::RunStage1()
     //Ghost
     GhostImg = LoadTexture("Characters/Ghost/Ghost.png", renderer);
     KillGhost.ghostInit(start_1_x + 400, start_1_y + 600, GhostImg, camera);
+
+    //GameUI
+    UserInterface.Init(renderer);
+
     RenderStage(renderer, stage_1, player, Tile_Array);
     SDL_RenderPresent(renderer);
     SDL_Delay(500);
@@ -32,20 +35,18 @@ RunStage1::~RunStage1()
     SDL_DestroyTexture(GhostImg);
     SDL_DestroyTexture(Laser_Texture);
     for (auto tex : Tile_Array) SDL_DestroyTexture(tex);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 }
-void RunStage1::RunGame()
+
+void RunStage1::RunGame(SDL_Renderer* renderer)
 {
     srand(time(0));
     while (running && player.alive)
     {
+        //Render Stage
         RenderStage(renderer, stage_1, player, Tile_Array);
         RenderCollider(renderer, stage_1_collider, player, Tile_Array);
 
         SDL_Delay(6);
-
         //Player Related Controls
         player.bullets.Shoot_bullets(renderer, stage_1_collider, Turrets.Turret_Wall_location, Turrets.Turret_Laser_location, deltaTime, camera);
         player.Handle_Movement( renderer, stage_1_collider,deltaTime, camera);
@@ -56,10 +57,13 @@ void RunStage1::RunGame()
         //Ghost
         KillGhost.RunGhost(renderer, camera, player, deltaTime);
 
+        //Render UI elements
+        UserInterface.RenderPlayerBar(renderer, player);
+
+
         SDL_RenderPresent(renderer);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
     }
     SDL_Delay(500);
-    quitSDL(window, renderer);
 }

@@ -8,6 +8,7 @@
 
 struct Turret_Laser;
 struct Turret_Wall;
+class Player;
 
 class revolver
 {
@@ -21,8 +22,9 @@ private:
 
     int Cooldown = 500;
     int ReloadTime = 1500;
-    int MaxAmmo = 7;
-    
+    const int MaxAmmo = 6;
+
+
     bool shooting = false;
     bool OnCooldown = false;
     bool EmptyMag = false;
@@ -35,8 +37,9 @@ private:
     Uint32 LastTimeShot = 0;
     
 public:
-    int ammo = 7;
+    int ammo = 6;
 
+    friend class Player;
     void get_revolver(SDL_Texture* bulletimg);
     void render(SDL_Renderer* renderer, SDL_Rect Dest);
     void Shoot_bullets(SDL_Renderer* renderer,  vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera);
@@ -51,8 +54,9 @@ public:
     int x, y; // Map location 
     int speed = 300;
     int hp = 10;
+    int MaxHp = 10;
     bool alive = true;
-    
+    bool win = false;
     SDL_Rect player_box; // To render on screen
     revolver bullets;
 

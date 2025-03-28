@@ -35,6 +35,12 @@ void initSDL(SDL_Window*& window, SDL_Renderer*& renderer, SDL_Surface*& surface
     surface = SDL_GetWindowSurface(window);
     if (surface == nullptr)
         logSDLError(std::cout, "GetWindowSurface", true);
+
+    //SDL_TTF
+    if (TTF_Init() == -1)
+    {
+        logSDLError(cerr, "Failed to initialize SDL_ttf: ", true);
+    }
 }
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer)

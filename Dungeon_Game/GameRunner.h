@@ -7,15 +7,13 @@
 #include "Turrets.h"
 #include "Ghost.h"
 #include "TurretManager.h"
+#include "GameUI.h"
+
 
 class RunStage1 
 {
 private:
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Surface* Screen_Window;
     SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-
     float deltaTime = (16 / 1000.0f); // 60 fps
     bool running = true;
     // character player
@@ -31,8 +29,11 @@ private:
     //Ghost
     SDL_Texture* GhostImg;
     ghost KillGhost;
+
+    //GameUI
+    InGameUI UserInterface;
 public:
-    RunStage1();
-    void RunGame();
+    RunStage1(SDL_Renderer* renderer);
+    void RunGame(SDL_Renderer* renderer);
     ~RunStage1();
 };

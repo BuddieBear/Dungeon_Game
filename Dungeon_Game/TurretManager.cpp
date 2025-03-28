@@ -68,8 +68,6 @@ void TurretManager::Turret_Connect(SDL_Rect camera, vector<vector<int>>& Collide
                 {
                     if (ColliderMap[i][gridX] == turretType)  // Another turret found
                     {
-
-                        cerr << "Connected Down!" << endl;
                         // Fill the space in between with wall_fire
                         for (int j = gridY + 1; j < i; j++)
                         {
@@ -85,7 +83,6 @@ void TurretManager::Turret_Connect(SDL_Rect camera, vector<vector<int>>& Collide
                 {
                     if (ColliderMap[gridY][k] == turretType)  // Another turret found
                     {
-                        cerr << "Connected Right!" << endl;
                         // Fill the space in between with wall_fire
                         for (int j = gridX + 1; j < k; j++)
                         {

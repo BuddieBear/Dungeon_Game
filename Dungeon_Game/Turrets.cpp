@@ -89,7 +89,6 @@ bool Turret_Laser::Bullet_Hit(SDL_Rect camera, vector<vector<int>>& ColliderMap,
     }
     else if (Check_Surrounding_Laser(box, a, b, ColliderMap))
     {
-        ColliderMap[b][a] = 0;
         this->shot.shooting = false;
         return true;
     }
