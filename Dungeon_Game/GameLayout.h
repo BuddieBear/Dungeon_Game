@@ -8,6 +8,7 @@
 std::vector<std::vector<int>> LoadCSVMap(const std::string& filename);
 void GetStageArray( std::vector <std::vector<int>> &Stage, int n_map);
 void LoadTileTextures(SDL_Renderer* renderer, vector<SDL_Texture*> &TileTextures);
-void RenderStage(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileMap, player_hitbox player, const vector<SDL_Texture*> &TileTextures);
-void RenderCollider(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileMap, player_hitbox player, const vector<SDL_Texture*>& TileTextures);
+void RenderStage(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileMap, Player& player, const vector<SDL_Texture*>& TileTextures);
+void RenderCollider(SDL_Renderer* renderer, std::vector<std::vector<int>>& tileMap, Player& player, const vector<SDL_Texture*>& TileTextures);
+
 #endif

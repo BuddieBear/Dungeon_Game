@@ -14,12 +14,7 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
-//New headers
 
-/*#include "Characters.h"
-#include "Layout.h"
-#include "SDL_Utils.h"
-#include "Turrets.h"*/
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -33,7 +28,7 @@ const int start_2_x = 0;
 const int start_2_y = 0;
 
 //Objectives decals
-const int TileCount = 27;
+const int TileCount = 30;
 
 const int gold_gate = 17;
 const int silver_gate = 15; 
@@ -45,10 +40,13 @@ const int wall_turret_2 = 23;
 const int wall_fire = 24;
 const int laser_turret_1 = 25;
 const int laser_turret_2 = 26;
+const int Unopened_wood_chest = 28;
+const int Opened_wood_chest = 29;
 
+const int victory_crown = 27;
 //Animation timing
 const int Delay_Frame = 42; // 1000/24 = 42(ms) or 24 fps
-const int bullet_frame = 16; // 60fps
+const int bullet_frame = 16; // 60fpsw
 
 //Player
 const int p_size = 48;

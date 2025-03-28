@@ -2,6 +2,9 @@
 
 #include "Basis.h"
 #include "SDL_Utils.h"
+#include "Character.h"
+
+class Player;
 
 struct Turret_Wall // Creates a wall of flame
 {
@@ -33,15 +36,14 @@ struct Turret_Laser
 {
 	int x, y; // CSV location 
 	Laser shot;
+
+	void Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, float delta, Player& player);
+	bool Bullet_Hit(SDL_Rect camera, vector<vector<int>>& ColliderMap, Player& player);
+	bool Check_Surrounding_Laser(int n_decal, int a, int b, vector<vector<int>>& ColliderMap);
+
 };
 
 
 
-void Store_Turret_Wall_Location(vector<Turret_Wall>& Wall_Turrets, vector<vector<int>> ColliderMap);
-void Turret_Connect(SDL_Rect camera, vector<vector<int>>& ColliderMap);
 
-void Store_Turret_Laser_Location(vector<Turret_Laser>& Laser_Turrets, vector<vector<int>>& ColliderMap);
-void All_Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, vector<Turret_Laser>& Laser_Turrets, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, float delta, SDL_Rect player_box, bool& player_alive, int& player_hp);
-void Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, Turret_Laser& Turret, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, float delta, SDL_Rect player_box, bool& player_alive, int& player_hp);
-bool Bullet_Hit(Turret_Laser& Turret, SDL_Rect camera, vector<vector<int>>& ColliderMap, SDL_Rect player_box, bool& player_alive, int& player_hp);
-bool Check_Surrounding_Laser(Laser shot, int n_decal, int a, int b, vector<vector<int>>& ColliderMap);
+

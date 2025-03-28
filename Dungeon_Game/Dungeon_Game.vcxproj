@@ -135,21 +135,21 @@
   <ItemGroup>
     <ClCompile Include="Basis.cpp" />
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="TurretManager.cpp" />
     <ClCompile Include="GameRunner.cpp" />
-    <ClCompile Include="Layout.cpp" />
+    <ClCompile Include="GameLayout.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Minions.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="SDL_Utils.cpp" />
     <ClCompile Include="Turrets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Basis.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="TurretManager.h" />
     <ClInclude Include="GameRunner.h" />
-    <ClInclude Include="Layout.h" />
-    <ClInclude Include="Minions.h" />
+    <ClInclude Include="GameLayout.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="SDL_Utils.h" />
     <ClInclude Include="Turrets.h" />
   </ItemGroup>

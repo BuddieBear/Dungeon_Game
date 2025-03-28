@@ -2,99 +2,94 @@
 
 
 //Bullets
-void revolver::render(SDL_Renderer* renderer, SDL_Rect Dest, SDL_Texture* Bullet_Texture, bool shooting)
+revolver::~revolver()
+{
+    SDL_DestroyTexture(this->Img);
+}
+void revolver::get_revolver(SDL_Texture* bulletimg)
+{
+    shot_hitbox.w = TILE_SIZE;
+    shot_hitbox.h = TILE_SIZE;
+    Img = bulletimg;
+}
+
+void revolver::render(SDL_Renderer* renderer, SDL_Rect Dest)
 {
     //  Add condition that it is still shooting
     if (shooting)
     {
-        SDL_RenderCopyEx(renderer, Bullet_Texture, NULL, &Dest, angle*(180.0/M_PI)+90, NULL, SDL_FLIP_NONE); // angle clockwise
+        SDL_RenderCopyEx(renderer, Img, NULL, &Dest, angle*(180.0/M_PI)+90, NULL, SDL_FLIP_NONE); // angle clockwise
         SDL_RenderDrawRect(renderer, &Dest); //hitbox
     }
     
 }
 
-void Shoot_bullets(SDL_Renderer* renderer, revolver& shot, player_hitbox player, SDL_Texture* Bullet_Texture,vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera)
+void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera)
 {
     int mouseX, mouseY;
-    static bool shooting = false;
-    static bool OnCooldown = false;
-    static bool EmptyMag = false;
-    static bool Updated_shot = true;
-    static bool JustPress = false;
-   
-    SDL_Rect shot_hitbox; // On screen only
-    shot_hitbox.w = TILE_SIZE;
-    shot_hitbox.h = TILE_SIZE;
-
-    static Uint32 LastTimeRender = 0;
-    static Uint32 LastTimeShot = 0;
 
     Uint32 mouseButtons = SDL_GetMouseState(&mouseX, &mouseY);
     Uint32 currentTime = SDL_GetTicks();
 
-    if (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT) && !OnCooldown && !EmptyMag && !JustPress)
+    if (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT) && !OnCooldown && !EmptyMag)
     {
 
-        shot.x_dest = mouseX;
-        shot.y_dest = mouseY;
+        this ->x_dest = mouseX;
+        this ->y_dest = mouseY;
         shooting = true;
         Updated_shot = false;
         OnCooldown = true;
-        JustPress = true;
 
-        shot.ammo -= 1;
+        ammo -= 1;
 
-        shot.x = player.x - TILE_SIZE/2;
-        shot.y = player.y - TILE_SIZE/2;
-    }
-    else
-    {
-        JustPress = false;
+        this ->x = camera.x + SCREEN_WIDTH/2 - TILE_SIZE/2;
+        this ->y = camera.y + SCREEN_HEIGHT/2 - TILE_SIZE/2;
     }
 
-    if (shot.ammo == 0)
+
+    if (ammo == 0)
     {
         EmptyMag = true;
     }
 
-    if (OnCooldown && EmptyMag == false && currentTime > LastTimeShot + shot.Cooldown) //Allow to shoot with ammo left
+    if (OnCooldown && EmptyMag == false && currentTime > LastTimeShot + Cooldown) //Allow to shoot with ammo left
     {
         LastTimeShot = currentTime;
         OnCooldown = false;
     }
 
-    if (EmptyMag && currentTime > LastTimeShot + shot.ReloadTime)
+    if (EmptyMag && currentTime > LastTimeShot + ReloadTime)
     {
         LastTimeShot = currentTime;
         EmptyMag = false;
-        shot.ammo = shot.MaxAmmo;   
+        ammo = MaxAmmo;   
     }
 
 
     if (shooting && !Updated_shot )
     {
-        shot.angle = atan2((float)shot.y_dest - SCREEN_HEIGHT / 2, (float)shot.x_dest - SCREEN_WIDTH / 2);
-        shot.x_speed = (double) shot.speed * cos(shot.angle) * delta;
-        shot.y_speed = (double) shot.speed * sin(shot.angle) * delta;
+        angle = atan2((float) this->y_dest - SCREEN_HEIGHT / 2, (float) this->x_dest - SCREEN_WIDTH / 2);
+        this ->x_speed = (double) speed * cos(angle) * delta;
+        this ->y_speed = (double) speed * sin(angle) * delta;
         Updated_shot = true;
     }
 
 
     //Animation
-    shot_hitbox.x = shot.x - camera.x;
-    shot_hitbox.y = shot.y - camera.y;
+    shot_hitbox.x = this ->x - camera.x;
+    shot_hitbox.y = this ->y - camera.y;
 
-    if ((shooting && currentTime > LastTimeRender + bullet_frame) && !Check_BulletHit(shooting, shot_hitbox, shot, player, ColliderMap, TurretWallLocation, Laser_Turrets) )
+    if ((shooting && currentTime > LastTimeRender + bullet_frame) && !Check_BulletHit(ColliderMap, TurretWallLocation, Laser_Turrets) )
     {
-        shot.x += shot.x_speed;
-        shot.y += shot.y_speed;
+        this ->x += x_speed;
+        this ->y += y_speed;
         LastTimeRender = currentTime;
     }
 
-    shot.render(renderer, shot_hitbox, Bullet_Texture, shooting);
+    this ->render(renderer, shot_hitbox);
 }
 
-bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, revolver& shot, player_hitbox player, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets)
+bool revolver::Check_BulletHit(vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets)
 {
     //Out of screen
     if (shot_hitbox.x > SCREEN_WIDTH || shot_hitbox.y > SCREEN_HEIGHT || shot_hitbox.x < 0 || shot_hitbox.y < 0)
@@ -103,8 +98,8 @@ bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, revolver& shot, playe
         return true;
     }
    
-    int a = shot.x / TILE_SIZE;
-    int b = shot.y / TILE_SIZE;
+    int a = this->x / TILE_SIZE;
+    int b = this->y / TILE_SIZE;
 
     int tile_n = ColliderMap[b][a];
 
@@ -114,22 +109,23 @@ bool Check_BulletHit(bool& shooting, SDL_Rect shot_hitbox, revolver& shot, playe
         shooting = false;
         return true;
     }
-    else if (Check_Surrounding_Bullet(shot, box, a, b, ColliderMap, TurretWallLocation, Laser_Turrets) || Check_Surrounding_Bullet(shot, wall_turret_1, a, b, ColliderMap, TurretWallLocation, Laser_Turrets) || Check_Surrounding_Bullet(shot, wall_turret_2, a, b, ColliderMap, TurretWallLocation, Laser_Turrets))
+    else if (Check_Surrounding_Bullet(box, a, b, ColliderMap, TurretWallLocation, Laser_Turrets) || Check_Surrounding_Bullet( wall_turret_1, a, b, ColliderMap, TurretWallLocation, Laser_Turrets) || Check_Surrounding_Bullet(wall_turret_2, a, b, ColliderMap, TurretWallLocation, Laser_Turrets))
     {
         shooting = false;
         return true;
     }
-    else if (Check_Surrounding_Bullet(shot, laser_turret_1, a, b, ColliderMap, TurretWallLocation, Laser_Turrets) || Check_Surrounding_Bullet(shot, laser_turret_2, a, b, ColliderMap, TurretWallLocation, Laser_Turrets)) // shoot laser turret
+    else if (Check_Surrounding_Bullet(laser_turret_1, a, b, ColliderMap, TurretWallLocation, Laser_Turrets) || Check_Surrounding_Bullet(laser_turret_2, a, b, ColliderMap, TurretWallLocation, Laser_Turrets)) // shoot laser turret
     {
         shooting = false;
         return true;
     }
     else return false;
 }
-bool Check_Surrounding_Bullet(revolver shot, int n_decal, int a, int b, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets)
+// can optimize furthur
+bool revolver::Check_Surrounding_Bullet(int n_decal, int a, int b, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets)
 {
     SDL_Rect TempTile = { 0, 0, TILE_SIZE, TILE_SIZE };
-    SDL_Rect shot_hitbox = { shot.x - TILE_SIZE / 2, shot.y - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE };
+    SDL_Rect shotOnMap = { this->x - TILE_SIZE / 2, this->y - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE };
 
     int mapHeight = ColliderMap.size();
     int mapWidth = ColliderMap[0].size();
@@ -150,7 +146,7 @@ bool Check_Surrounding_Bullet(revolver shot, int n_decal, int a, int b, vector<v
                 TempTile.x = checkX * TILE_SIZE;
                 TempTile.y = checkY * TILE_SIZE;
 
-                if (CheckCollisionRect(shot_hitbox, TempTile))
+                if (CheckCollisionRect(shotOnMap, TempTile))
                 {
                     if (n_decal == wall_turret_2 || n_decal == wall_turret_1) // if hit wall
                     {
@@ -249,23 +245,44 @@ bool Check_Surrounding_Bullet(revolver shot, int n_decal, int a, int b, vector<v
 }
 
 // players
-void LoadAnimation(vector<SDL_Texture*>& Animation_pack, SDL_Renderer* renderer)
+
+void Player::PlayerInit(SDL_Texture* playerText, SDL_Texture* BulletText, SDL_Renderer* renderer)
+{
+    player_box = { SCREEN_WIDTH / 2 - p_size / 2, SCREEN_HEIGHT / 2 - p_size / 2, p_size, p_size };
+    this->Img = playerText;
+    this->bullets.get_revolver(BulletText);
+    this->LoadAnimation(renderer);
+}
+
+Player::~Player()
+{
+    SDL_DestroyTexture(this->Img);
+    for (auto tex : this->Walk_Animation) SDL_DestroyTexture(tex);
+}
+
+void Player::LoadAnimation( SDL_Renderer* renderer)
 {
     for (int i = 0; i < 8; i++)
     {
         string Animation_file = "Characters/Cowboy/Walk/Walk (" + to_string(i + 1) + ").png";
-        Animation_pack.push_back(LoadTexture(Animation_file, renderer));
+        this->Walk_Animation.push_back(LoadTexture(Animation_file, renderer));
         cerr << Animation_file << endl;
     }
 }
 
-void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& player, const int &speed, vector <vector<int>>& ColliderMap, vector<SDL_Texture*> Animation, float delta, SDL_Rect& camera, bool& player_alive)
+void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, float delta, SDL_Rect& camera)
 {
+    /*if (this->hp == 0)
+    {
+        this->alive = false;
+        return;
+    }*/ // long
+
     int Cycle_Frame = 8; // 8 images
+
     static Uint32 LastFrame =0; // Track time for animation
     static int CurrentFrame = 0;
     static int n = 0;
-    
     static bool Right = true;
 
     SDL_Event event;
@@ -275,7 +292,7 @@ void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& playe
     {
         if (event.type == SDL_QUIT)
         {
-            running = false;
+            this->alive = false;
         }
     }
     const Uint8* keystates = SDL_GetKeyboardState(NULL);
@@ -291,7 +308,7 @@ void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& playe
         speed_y *= 0.7071;
         speed_x *= 0.7071;
     }
-    Check_Collision(player,speed_x, speed_y, ColliderMap, camera, player_alive);
+    Check_Collision(speed_x, speed_y, ColliderMap, camera);
 
     //Animation (24 fps) 
     Uint32 currentTime = SDL_GetTicks(); 
@@ -301,21 +318,26 @@ void Handle_Movement(bool& running, SDL_Renderer* renderer, player_hitbox& playe
         LastFrame = currentTime;
     }
     //Updates frames
-    RenderCharacter(Animation, renderer, CurrentFrame, Right);
+    RenderCharacter(renderer, CurrentFrame, Right);
 }
 
-void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera, bool& player_alive)
+void Player::Check_Collision( int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera)
 {
-    int new_x = player.x + x_plus;
-    int new_y = player.y + y_plus;
+    int new_x = this->x + x_plus;
+    int new_y = this->y + y_plus;
     
-    new_x = new_x / TILE_SIZE  ;
-    new_y = new_y / TILE_SIZE  ;
+    new_x = new_x / TILE_SIZE -1;
+    new_y = new_y / TILE_SIZE -1;
 
     int tile_num = ColliderMap[new_y][new_x];
     
-    if (tile_num == 0)
+    if (tile_num == 0|| tile_num == Opened_wood_chest)
     { 
+    }
+    else if (tile_num == victory_crown)
+    {
+        cerr << "YOU WON";
+        this->alive = false;
     }
     else if (tile_num == gold_key)
     {
@@ -345,21 +367,49 @@ void Check_Collision(player_hitbox& player, int x_plus, int y_plus, vector <vect
             }
         }
     }
+    else if (tile_num == Unopened_wood_chest)
+    {
+        int odd = rand() % 2;
+        ColliderMap[new_y][new_x] = Opened_wood_chest;
+
+        if (odd == 0)
+        {
+            cerr << "Oopsie Daisy" << endl;
+            this->alive = false;
+        }
+        else if (odd == 1)
+        {
+            cerr << "Reward: 1Mil bullets" << endl;
+            this->bullets.ammo = 1000000;
+        }
+        else if (odd == 2)
+        {
+            cerr << "Reward: 20Hp" <<endl;
+            this->hp = 20;
+        }
+        else
+        {
+            cerr << "Reward: Refill HP and Ammo" << endl;
+            this->hp = 10;
+            this->bullets.ammo = 7;
+        }
+        // add more rewards
+    }
     else if (tile_num == wall_fire || tile_num == wall_turret_1 || tile_num == wall_turret_2 || tile_num == laser_turret_1 || tile_num == laser_turret_2)
     {
-        player_alive = false;
+        this->alive = false;
     }
     else { return; }
 
-    camera.x = player.x - SCREEN_WIDTH / 2;
-    camera.y = player.y - SCREEN_HEIGHT / 2;
+    camera.x = this->x - SCREEN_WIDTH / 2;
+    camera.y = this->y - SCREEN_HEIGHT / 2;
 
-    player.x = player.x + x_plus;
-    player.y = player.y + y_plus;
+    this->x += x_plus;
+    this->y += y_plus;
     return;
 }
 
-void RenderCharacter( vector<SDL_Texture*> Animation, SDL_Renderer* renderer, int CurrentFrame, bool FaceRight)
+void Player::RenderCharacter(  SDL_Renderer* renderer, int CurrentFrame, bool FaceRight)
 {
 
     SDL_Rect destRect;
@@ -372,13 +422,12 @@ void RenderCharacter( vector<SDL_Texture*> Animation, SDL_Renderer* renderer, in
 
     if (FaceRight) // >D
     {
-        SDL_RenderCopy(renderer, Animation[CurrentFrame], NULL, &destRect);
+        SDL_RenderCopy(renderer, Walk_Animation[CurrentFrame], NULL, &destRect);
         SDL_RenderDrawRect(renderer, &destRect);
     }
     else // A<
     {
-        SDL_RenderCopyEx(renderer, Animation[CurrentFrame], NULL, &destRect, 0, NULL, SDL_FLIP_HORIZONTAL);
+        SDL_RenderCopyEx(renderer, Walk_Animation[CurrentFrame], NULL, &destRect, 0, NULL, SDL_FLIP_HORIZONTAL);
         SDL_RenderDrawRect(renderer, &destRect);
     }
 }
-

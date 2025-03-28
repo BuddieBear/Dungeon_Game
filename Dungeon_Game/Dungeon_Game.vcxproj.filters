@@ -27,7 +27,7 @@
     <ClCompile Include="Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Layout.cpp">
+    <ClCompile Include="GameLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Turrets.cpp">
@@ -36,7 +36,10 @@
     <ClCompile Include="GameRunner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MovingEntity.cpp">
+    <ClCompile Include="TurretManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ghost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +53,7 @@
     <ClInclude Include="Character.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Layout.h">
+    <ClInclude Include="GameLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Turrets.h">
@@ -59,7 +62,10 @@
     <ClInclude Include="GameRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MovingEntity.h">
+    <ClInclude Include="TurretManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ghost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

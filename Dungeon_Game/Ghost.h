@@ -2,6 +2,7 @@
 
 #include "basis.h"
 #include "SDL_Utils.h"
+#include "Character.h"
 
 class ghost
 {
@@ -18,6 +19,7 @@ private:
 
 public:
 	void ghostInit(int x0, int y0, SDL_Texture* TextGhost, SDL_Rect camera);
+	void RunGhost(SDL_Renderer* renderer, SDL_Rect camera, Player& player, float delta);
 	void Move(SDL_Renderer* renderer, SDL_Rect player, SDL_Rect camera, float delta);
 	bool HitPlayer(SDL_Rect player, SDL_Rect camera);
 	void Render(SDL_Renderer* renderer, SDL_Rect camera);

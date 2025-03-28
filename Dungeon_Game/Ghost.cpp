@@ -1,4 +1,4 @@
-#include "Minions.h"
+#include "Ghost.h"
 
 
 void ghost::ghostInit(int x0, int y0, SDL_Texture* TextGhost, SDL_Rect camera)
@@ -10,6 +10,17 @@ void ghost::ghostInit(int x0, int y0, SDL_Texture* TextGhost, SDL_Rect camera)
 	this->GhostImg = TextGhost;
 	this->GhostHitbox = { this->x - camera.x - GhostSize/2, this->y - camera.y - GhostSize / 2, this->GhostSize, this->GhostSize };
 }
+
+void ghost::RunGhost(SDL_Renderer* renderer, SDL_Rect camera, Player& player, float delta)
+{
+	if (!HitPlayer(player.player_box, camera))
+	{
+		Move(renderer, player.player_box, camera, delta);
+		Render(renderer, camera);
+	}
+	else { player.alive = false; cerr << "BOO! >:)"; }
+}
+
 void ghost::Move(SDL_Renderer* renderer, SDL_Rect player, SDL_Rect camera, float delta) // moves if (!hitplayer)
 {
 	//calculate the angle and speed everytime
