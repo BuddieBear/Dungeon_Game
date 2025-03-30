@@ -13,8 +13,8 @@
 class RunStage1 
 {
 private:
-    SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-    float deltaTime = (16 / 1000.0f); // 60 fps
+    SDL_Rect camera = { start_1_x - SCREEN_WIDTH/2, start_1_y -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT };
+    float deltaTime = 0;
     bool running = true;
     // character player
     Player player;
@@ -34,6 +34,6 @@ private:
     InGameUI UserInterface;
 public:
     RunStage1(SDL_Renderer* renderer);
-    void RunGame(SDL_Renderer* renderer);
+    GameState RunGame(SDL_Renderer* renderer);
     ~RunStage1();
 };

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Basis.h"
 #include "SDL_Utils.h"
 class Game

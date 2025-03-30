@@ -7,18 +7,18 @@
 class ghost
 {
 private:
-	int x, y; //Map location
-	int speed = 100;
-	int x_speed, y_speed;
-	float angle;
+	int x = start_1_x + 400, y = start_1_y + 600 ; //Map location
+	int speed = 3;
+	int x_speed =0, y_speed =0;
+	float angle =0;
 	bool alive = true;
 
 	int GhostSize = 48;
-	SDL_Texture* GhostImg;
+	SDL_Texture* GhostImg = nullptr;
 	SDL_Rect GhostHitbox;
 
 public:
-	void ghostInit(int x0, int y0, SDL_Texture* TextGhost, SDL_Rect camera);
+	void ghostInit(SDL_Texture* TextGhost, SDL_Rect camera);
 	void RunGhost(SDL_Renderer* renderer, SDL_Rect camera, Player& player, float delta);
 	void Move(SDL_Renderer* renderer, SDL_Rect player, SDL_Rect camera, float delta);
 	bool HitPlayer(SDL_Rect player, SDL_Rect camera);

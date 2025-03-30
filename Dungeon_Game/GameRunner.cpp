@@ -20,14 +20,12 @@ RunStage1::RunStage1(SDL_Renderer* renderer)
 
     //Ghost
     GhostImg = LoadTexture("Characters/Ghost/Ghost.png", renderer);
-    KillGhost.ghostInit(start_1_x + 400, start_1_y + 600, GhostImg, camera);
-
+    KillGhost.ghostInit(GhostImg, camera);
     //GameUI
     UserInterface.Init(renderer);
 
     RenderStage(renderer, stage_1, player, Tile_Array);
     SDL_RenderPresent(renderer);
-    SDL_Delay(500);
 }
 
 RunStage1::~RunStage1()
@@ -37,11 +35,16 @@ RunStage1::~RunStage1()
     for (auto tex : Tile_Array) SDL_DestroyTexture(tex);
 }
 
-void RunStage1::RunGame(SDL_Renderer* renderer)
+GameState RunStage1::RunGame(SDL_Renderer* renderer)
 {
     srand(time(0));
+    Uint64 lastTime = SDL_GetTicks();
     while (running && player.alive)
     {
+        Uint64 CurrentTime = SDL_GetTicks();
+        deltaTime = (CurrentTime - lastTime) / 1000.0f *1.40; // Convert to seconds
+        lastTime = CurrentTime;
+
         //Render Stage
         RenderStage(renderer, stage_1, player, Tile_Array);
         RenderCollider(renderer, stage_1_collider, player, Tile_Array);
@@ -65,5 +68,7 @@ void RunStage1::RunGame(SDL_Renderer* renderer)
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
     }
+    //Add the display for win/loss
+    return MainMenu;
     SDL_Delay(500);
 }

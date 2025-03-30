@@ -321,95 +321,117 @@ void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& Colli
     //Updates frames
     RenderCharacter(renderer, CurrentFrame, Right);
 }
-
-void Player::Check_Collision( int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera)
+void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& ColliderMap, SDL_Rect& camera)
 {
     int new_x = this->x + x_plus;
     int new_y = this->y + y_plus;
-    
-    new_x = new_x / TILE_SIZE -1;
-    new_y = new_y / TILE_SIZE -1;
 
-    int tile_num = ColliderMap[new_y][new_x];
-    
-    if (tile_num == 0|| tile_num == Opened_wood_chest)
-    { 
-    }
-    else if (tile_num == victory_crown)
-    {
-        cerr << "YOU WON";
-        this->win = true;
-        this->alive = false;
-    }
-    else if (tile_num == gold_key)
-    {
-        //Remove the Gold gate and Gold key
-        for (auto& row : ColliderMap)
-        {
-            for (auto& tile : row)
-            {
-                if (tile == gold_key || tile == gold_gate)
-                {
-                    tile = 0;
-                }
-            }
-        }
-    }
-    else if (tile_num == silver_key)
-    {
-        //Tuong tu
-        for (auto& row : ColliderMap)
-        {
-            for (auto& tile : row)
-            {
-                if (tile == silver_key || tile == silver_gate)
-                {
-                    tile = 0;
-                }
-            }
-        }
-    }
-    else if (tile_num == Unopened_wood_chest)
-    {
-        int odd = rand() % 2;
-        ColliderMap[new_y][new_x] = Opened_wood_chest;
+    // Check the new position in tile coordinates
+    int tile_x = new_x / TILE_SIZE;
+    int tile_y = new_y / TILE_SIZE;
 
-        if (odd == 0)
-        {
-            cerr << "Oopsie Daisy" << endl;
-            this->alive = false;
-        }
-        else if (odd == 1)
-        {
-            cerr << "Reward: 1Mil bullets" << endl;
-            this->bullets.ammo = 1000000;
-        }
-        else if (odd == 2)
-        {
-            cerr << "Reward: 20Hp" <<endl;
-            this->MaxHp = 20;
-            this->hp = 20;
-        }
-        else
-        {
-            cerr << "Reward: Refill HP and Ammo" << endl;
-            this->hp = 10;
-            this->bullets.ammo = 7;
-        }
-        // add more rewards
-    }
-    else if (tile_num == wall_fire || tile_num == wall_turret_1 || tile_num == wall_turret_2 || tile_num == laser_turret_1 || tile_num == laser_turret_2)
-    {
-        this->alive = false;
-    }
-    else { return; }
+    // Create the hitbox for the new position BEFORE moving
+    SDL_Rect NewHitbox = { new_x - 36 / 2, new_y - 36 / 2, 36, 36 };
 
+    // Check collision BEFORE updating the position
+    if (Check_Surrounding_Player(NewHitbox, tile_x, tile_y, ColliderMap)) 
+    {
+        return; // Collision detected, don't move
+    }
+
+    // Update the player's position ONLY if no collision
+    this->x = new_x;
+    this->y = new_y;
+
+    // Update camera position to follow player
     camera.x = this->x - SCREEN_WIDTH / 2;
     camera.y = this->y - SCREEN_HEIGHT / 2;
+}
 
-    this->x += x_plus;
-    this->y += y_plus;
-    return;
+bool Player::Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap)
+{
+    for (int i = -1; i <= 1; i++)
+    {
+        for (int k = -1; k <= 1; k++)
+        {
+            int x0 = new_x + i;
+            int y0 = new_y + k;
+            int TileNum = ColliderMap[y0][x0];
+            if (TileNum != 0 && TileNum != Opened_wood_chest)
+            {
+                SDL_Rect TempTile = { x0 * TILE_SIZE, y0 * TILE_SIZE, TILE_SIZE, TILE_SIZE };
+                if (CheckCollisionRect(NewHitbox, TempTile))
+                {
+                    if (TileNum == silver_key)
+                    {
+                        for (auto& row : ColliderMap)
+                        {
+                            for (auto& tile : row)
+                            {
+                                if (tile == silver_key || tile == silver_gate)
+                                {
+                                    tile = 0;
+                                }
+                            }
+                        }
+                    }
+                    else if (TileNum == gold_key)
+                    {
+                        for (auto& row : ColliderMap)
+                        {
+                            for (auto& tile : row)
+                            {
+                                if (tile == gold_key || tile == gold_gate)
+                                {
+                                    tile = 0;
+                                }
+                            }
+                        }
+                    }
+                    else if (TileNum == victory_crown)
+                    {
+                        this->win = true;
+                        this->alive = false;
+                    }
+                    else if (TileNum == Unopened_wood_chest)
+                    {
+                        int odd = rand() % 2;
+                        ColliderMap[new_y][new_x] = Opened_wood_chest;
+
+                        if (odd == 0)
+                        {
+                            cerr << "Oopsie Daisy" << endl;
+                            this->alive = false;
+                        }
+                        else if (odd == 1)
+                        {
+                            cerr << "Reward: 1Mil bullets" << endl;
+                            this->bullets.ammo = 1000000;
+                        }
+                        else if (odd == 2)
+                        {
+                            cerr << "Reward: 20Hp" << endl;
+                            this->MaxHp = 20;
+                            this->hp = 20;
+                        }
+                        else
+                        {
+                            cerr << "Reward: Refill HP and Ammo" << endl;
+                            this->hp = 10;
+                            this->bullets.ammo = 7;
+                        }
+                        // add more rewards
+                    }
+                    else if (TileNum == wall_fire || TileNum == wall_turret_1 || TileNum == wall_turret_2 || TileNum == laser_turret_1 || TileNum == laser_turret_2)
+                    {
+                        this->alive = false;
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 void Player::RenderCharacter(  SDL_Renderer* renderer, int CurrentFrame, bool FaceRight)

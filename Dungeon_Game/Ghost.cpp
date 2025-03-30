@@ -1,14 +1,10 @@
 #include "Ghost.h"
 
 
-void ghost::ghostInit(int x0, int y0, SDL_Texture* TextGhost, SDL_Rect camera)
+void ghost::ghostInit( SDL_Texture* TextGhost, SDL_Rect camera)
 {
-	x_speed = 0;
-	y_speed = 0;
-	angle = 0;
-	x = x0; y = y0;
 	this->GhostImg = TextGhost;
-	this->GhostHitbox = { this->x - camera.x - GhostSize/2, this->y - camera.y - GhostSize / 2, this->GhostSize, this->GhostSize };
+	this->GhostHitbox = { this->x - camera.x - GhostSize/2 , this->y - camera.y - GhostSize / 2, this->GhostSize, this->GhostSize };
 }
 
 void ghost::RunGhost(SDL_Renderer* renderer, SDL_Rect camera, Player& player, float delta)
@@ -21,31 +17,44 @@ void ghost::RunGhost(SDL_Renderer* renderer, SDL_Rect camera, Player& player, fl
 	else { player.alive = false; cerr << "BOO! >:)"; }
 }
 
-void ghost::Move(SDL_Renderer* renderer, SDL_Rect player, SDL_Rect camera, float delta) // moves if (!hitplayer)
+
+void ghost::Move(SDL_Renderer* renderer, SDL_Rect player, SDL_Rect camera, float delta)
 {
-	//calculate the angle and speed everytime
-	int x_screen = this->x - camera.x;
-	int y_screen = this->y - camera.y;
+	Uint32 currentTime = SDL_GetTicks(); // Get current time
+	static Uint32 lastUpdateTime = 0; // Update last update time
 
-	this->angle = atan2((SCREEN_HEIGHT / 2) - y_screen, (SCREEN_WIDTH / 2) - x_screen);
-	this->x_speed = this->speed * cos(angle) * delta;
-	this->y_speed = this->speed * sin(angle) * delta;
+	Uint32 Interval = 24;
+	// Check if enough time has passed
+	if (currentTime - lastUpdateTime > Interval)
+	{
+		lastUpdateTime = currentTime;
+		int x_screen = this->x - camera.x;
+		int y_screen = this->y - camera.y;
 
-	//Update location
-	this->x += this->x_speed;
-	this->y += this->y_speed;
+		// Calculate movement direction towards player (center of screen)
+		this->angle = atan2((SCREEN_HEIGHT / 2) - y_screen, (SCREEN_WIDTH / 2) - x_screen);
 
-	this->GhostHitbox.x = this->x - camera.x - GhostSize / 2;
-	this->GhostHitbox.y = this->y - camera.y - GhostSize / 2;
+		// Apply movement with delta time
+		this->x_speed = this->speed * cos(angle);
+		this->y_speed = this->speed * sin(angle);
 
+		this->x += this->x_speed;
+		this->y += this->y_speed;
+
+		this->x += this->x_speed;
+		this->y += this->y_speed;
+
+		// Corrected screen-space hitbox position
+		this->GhostHitbox.x = (this->x - camera.x) - GhostSize / 2;
+		this->GhostHitbox.y = (this->y - camera.y) - GhostSize / 2;
+	}
+	return;
 }
 
-// if (hit player), delete this ghost from the vector
 bool ghost::HitPlayer(SDL_Rect player, SDL_Rect camera)
 {
 	if (CheckCollisionRect(this->GhostHitbox, player))
 	{
-		this->alive = false;
 		return true;
 	}
 	return false;
@@ -55,3 +64,6 @@ void ghost:: Render(SDL_Renderer* renderer, SDL_Rect camera)
 {
 	SDL_RenderCopy(renderer, this->GhostImg, NULL, &this->GhostHitbox);
 }
+
+/*
+*/

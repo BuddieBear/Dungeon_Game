@@ -1,6 +1,4 @@
-#ifndef CHARACTERS_H_
-#define CHARACTERS_H_
-
+#pragma once
 
 #include "Basis.h"
 #include "SDL_Utils.h"
@@ -17,7 +15,7 @@ private:
     int x =0, y =0; // Map location
 
     double angle =0; // Angle between ( (Width/2 , Height/2) -> (x, y)  ) to  Ox (clockwise)
-    double speed = 2000;
+    double speed = 2500;
     double x_speed =0, y_speed =0;
 
     int Cooldown = 500;
@@ -26,7 +24,7 @@ private:
 
 
     bool shooting = false;
-    bool OnCooldown = false;
+    bool OnCooldown =  false;
     bool EmptyMag = false;
     bool Updated_shot = true;
 
@@ -67,12 +65,11 @@ private:
 public:
     void PlayerInit(SDL_Texture* playerText, SDL_Texture* BulletText, SDL_Renderer* renderer);
     void LoadAnimation(SDL_Renderer* renderer);
-
+    
     void Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, float delta, SDL_Rect& camera);
     void RenderCharacter(SDL_Renderer* renderer, int CurrentFrame, bool FaceRight);
     void Check_Collision(int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera);
+    bool Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap);
 
     ~Player();
 };
-
-#endif // CHARACTERS_H_
