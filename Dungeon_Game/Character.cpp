@@ -24,16 +24,19 @@ void revolver::render(SDL_Renderer* renderer, SDL_Rect Dest)
     
 }
 
-void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera)
+void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera, bool JustShot)
 {
     int mouseX, mouseY;
-
     Uint32 mouseButtons = SDL_GetMouseState(&mouseX, &mouseY);
     Uint32 currentTime = SDL_GetTicks();
 
-    if (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT) && !OnCooldown && !EmptyMag)
+    if (ammo == 0)
     {
+        EmptyMag = true;
+    }
 
+    if (JustShot && !OnCooldown && !EmptyMag)
+    {
         this ->x_dest = mouseX;
         this ->y_dest = mouseY;
         shooting = true;
@@ -45,10 +48,6 @@ void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& Collid
         this ->y = camera.y + SCREEN_HEIGHT/2 - TILE_SIZE/2;
     }
 
-    if (ammo == 0)
-    {
-        EmptyMag = true;
-    }
 
     if (OnCooldown && EmptyMag == false && currentTime > LastTimeShot + Cooldown) //Allow to shoot with ammo left
     {
@@ -122,6 +121,7 @@ bool revolver::Check_BulletHit(vector<vector<int>>& ColliderMap, vector<Turret_W
     }
     else return false;
 }
+
 // can optimize furthur
 bool revolver::Check_Surrounding_Bullet(int n_decal, int a, int b, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets)
 {
@@ -271,7 +271,7 @@ void Player::LoadAnimation( SDL_Renderer* renderer)
     }
 }
 
-void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, float delta, SDL_Rect& camera)
+void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect& camera)
 {
     /*if (this->hp == 0)
     {
@@ -295,6 +295,10 @@ void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& Colli
         {
             this->alive = false;
         }
+        if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+        {
+            this->bullets.Shoot_bullets(renderer, ColliderMap, TurretWallLocation, Laser_Turrets, delta, camera, true);
+        }
     }
     const Uint8* keystates = SDL_GetKeyboardState(NULL);
 
@@ -303,6 +307,7 @@ void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& Colli
     if (keystates[SDL_SCANCODE_S]) { speed_y =  speed * delta; Moving = true; }
     if (keystates[SDL_SCANCODE_A]) { speed_x = -speed * delta; Moving = true; Right = false; }
     if (keystates[SDL_SCANCODE_D]) { speed_x =  speed * delta; Moving = true; Right = true;  }
+    
 
     if (speed_x != 0 && speed_y != 0) //diagonal ( A+W)
     {
@@ -396,7 +401,7 @@ bool Player::Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, 
                     else if (TileNum == Unopened_wood_chest)
                     {
                         int odd = rand() % 2;
-                        ColliderMap[new_y][new_x] = Opened_wood_chest;
+                        ColliderMap[y0][x0] = Opened_wood_chest;
 
                         if (odd == 0)
                         {
@@ -406,9 +411,10 @@ bool Player::Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, 
                         else if (odd == 1)
                         {
                             cerr << "Reward: 1Mil bullets" << endl;
+                            this->bullets.MaxAmmo = 1000000;
                             this->bullets.ammo = 1000000;
                         }
-                        else if (odd == 2)
+                        else if (odd <6)
                         {
                             cerr << "Reward: 20Hp" << endl;
                             this->MaxHp = 20;

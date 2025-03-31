@@ -2,16 +2,20 @@
 
 
 Menu::Menu(SDL_Renderer* renderer, TTF_Font* font)
-    : font(font), Index(-1) 
+    : font(font)
 {
     menuItems = { "Play   ", "Help    ", "Exit   " };
-    this->background = LoadTexture("UI_Elements/Menu/Background.png", renderer);
+    this->background = LoadTexture("UI_Elements/Menu/MenuBG.png", renderer);
     BackgroundBox = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SelectBG = LoadTexture("UI_Elements/Menu/SelectStage.png", renderer);
+    Manual = LoadTexture("UI_Elements/Menu/Manual.png", renderer);
 }
 
 Menu::~Menu() 
 {
     SDL_DestroyTexture(this->background);
+    SDL_DestroyTexture(this->SelectBG);
+    SDL_DestroyTexture(this->Manual);
 }
 
 SDL_Texture* Menu::RenderText(SDL_Renderer* renderer, const std::string& text, SDL_Color color)
@@ -23,10 +27,12 @@ SDL_Texture* Menu::RenderText(SDL_Renderer* renderer, const std::string& text, S
     return texture;
 }
 
-void Menu::RenderMenu(SDL_Renderer * renderer) 
+// Main Menu
+void Menu::RenderMainMenu(SDL_Renderer * renderer, int Index) 
 {
     SDL_Color normalColor = { 255, 255, 255 }; // White
     SDL_Color highlightColor = { 255, 0, 0 }; // Red
+
 
     //Render background
     SDL_RenderCopy(renderer, background, NULL, &BackgroundBox);
@@ -45,11 +51,11 @@ void Menu::RenderMenu(SDL_Renderer * renderer)
     }
 }
 
-GameState Menu::ShowMenu(SDL_Renderer* renderer) 
+GameState Menu::ShowMainMenu(SDL_Renderer* renderer) 
 {
     SDL_Event e;
     bool running = true;
-
+    int Index = -1;
     while (running) 
     {
         while (SDL_PollEvent(&e)) 
@@ -77,8 +83,12 @@ GameState Menu::ShowMenu(SDL_Renderer* renderer)
             if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) 
             {
                 if (Index == 0) 
-                { // Start Game button
-                    return Stage_1_Hard;
+                { // Select Stage
+                    return SelectStage;
+                }
+                else if (Index == 1)
+                {
+                    return Help;
                 }
                 else if (Index == 2) 
                 { // Exit button
@@ -89,8 +99,104 @@ GameState Menu::ShowMenu(SDL_Renderer* renderer)
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        RenderMenu(renderer);
+        RenderMainMenu(renderer, Index);
         SDL_RenderPresent(renderer);
     }
     return Exit;
+}
+
+// Select stage
+GameState Menu::ShowSelectStage(SDL_Renderer* renderer)
+{
+    SDL_Event e;
+    bool running = true;
+    while (running)
+    {
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT)
+            {
+                return Exit; // Exit the game
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
+            {
+                int mouseX = e.motion.x;
+                int mouseY = e.motion.y;
+                cerr << "x,y: " << mouseX << ", " << mouseY << endl;
+
+                if (mouseX > 250 && mouseX < 470)
+                {
+                    if (mouseY > 240 && mouseY < 290) // Top Left
+                    {
+                        return Stage_1_Easy;
+                    }
+                    else if (mouseY > 415 && mouseY < 460) // Bot Left
+                    {
+                        return Stage_2_Easy;
+                    }
+                }
+                else if (mouseX > 800 && mouseX < 1025)
+                {
+                    if (mouseY > 240 && mouseY < 290) // Top Right
+                    {
+                        return Stage_1_Hard;
+                    }
+                    else if (mouseY > 415 && mouseY < 460) // Bot Right
+                    {
+                        return Stage_2_Hard;
+                    }
+                }
+                if (mouseX > 480 && mouseX < 770 && mouseY > 595 && mouseY < 650)
+                {
+                    return MainMenu;
+                }
+            }
+        }
+        SDL_RenderClear(renderer);
+        RenderSelectStage(renderer);
+        SDL_RenderPresent(renderer);
+    }
+    return Exit;
+}
+
+void Menu::RenderSelectStage(SDL_Renderer* renderer)
+{
+    SDL_RenderCopy(renderer, this->SelectBG, NULL, &BackgroundBox);
+}
+
+
+// Manual
+GameState Menu::ShowHelpMenu(SDL_Renderer* renderer)
+{
+    SDL_Event e;
+    bool running = true;
+    while (running)
+    {
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT)
+            {
+                return Exit; // Exit the game
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
+            {
+                int mouseX = e.motion.x;
+                int mouseY = e.motion.y;
+                cerr << "Locate: " << mouseX << ", " << mouseY << endl;
+                if (mouseX > 470 && mouseX < 760 && mouseY > 635 && mouseY < 680)
+                {
+                    return MainMenu;
+                }
+            }
+        }
+        SDL_RenderClear(renderer);
+        RenderHelpMenu(renderer);
+        SDL_RenderPresent(renderer);
+    }
+    return Exit;
+}
+
+void Menu::RenderHelpMenu(SDL_Renderer* renderer)
+{
+    SDL_RenderCopy(renderer, this->Manual, NULL, &BackgroundBox);
 }

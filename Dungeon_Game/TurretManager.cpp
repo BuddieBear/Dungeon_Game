@@ -136,8 +136,8 @@ void TurretManager::All_Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, ve
     {
         int map_x = turret.x * TILE_SIZE;
         int map_y = turret.y * TILE_SIZE;
-        if (map_x >= camera.x - 400 && map_y >= camera.y - 400 &&
-            map_x <= camera.x + SCREEN_WIDTH + 100 && map_y <= camera.y + SCREEN_HEIGHT + 100)
+        if (map_x >= camera.x - 400 && map_y >= camera.y - 300 &&
+            map_x <= camera.x + SCREEN_WIDTH + 400 && map_y <= camera.y + SCREEN_HEIGHT + 300)
         {
 
             turret.Turret_Shoot(renderer, camera, ColliderMap, laserImg, delta, player);

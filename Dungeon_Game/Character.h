@@ -20,7 +20,8 @@ private:
 
     int Cooldown = 500;
     int ReloadTime = 1500;
-    const int MaxAmmo = 6;
+    
+    int MaxAmmo = 6;
 
 
     bool shooting = false;
@@ -36,11 +37,10 @@ private:
     
 public:
     int ammo = 6;
-
     friend class Player;
     void get_revolver(SDL_Texture* bulletimg);
     void render(SDL_Renderer* renderer, SDL_Rect Dest);
-    void Shoot_bullets(SDL_Renderer* renderer,  vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera);
+    void Shoot_bullets(SDL_Renderer* renderer,  vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera, bool JustShot );
     bool Check_BulletHit(vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets);
     bool Check_Surrounding_Bullet(int n_decal, int a, int b, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets);
     ~revolver();
@@ -66,7 +66,7 @@ public:
     void PlayerInit(SDL_Texture* playerText, SDL_Texture* BulletText, SDL_Renderer* renderer);
     void LoadAnimation(SDL_Renderer* renderer);
     
-    void Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, float delta, SDL_Rect& camera);
+    void Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect& camera);
     void RenderCharacter(SDL_Renderer* renderer, int CurrentFrame, bool FaceRight);
     void Check_Collision(int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera);
     bool Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap);

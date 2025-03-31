@@ -10,21 +10,44 @@ int main(int argc, char* argv[])
 
     TTF_Font* Menufont = TTF_OpenFont("UI_Elements/fonts/ShortBaby.ttf", 30);
 
-    bool GameRunning = true;
-
     GameState state = MainMenu;
+
+
 
     while (state != Exit)
     {
-        if (state == MainMenu)
+        if (state == MainMenu) // Main Menu
         {
             Menu game(renderer, Menufont);
-            state = game.ShowMenu(renderer);
+            state = game.ShowMainMenu(renderer);
+        }
+        else if (state == SelectStage)
+        {
+            Menu game(renderer, Menufont);
+            state = game.ShowSelectStage(renderer);
+        }
+        else if (state == Help)
+        {
+            Menu game(renderer, Menufont);
+            state = game.ShowHelpMenu(renderer);
+        }
+        else if (state == Stage_1_Easy) // Stage 1 
+        {
+            RunStage1 stage_1(renderer, Easy);
+            state = stage_1.RunGame(renderer);
         }
         else if (state == Stage_1_Hard)
         {
-            RunStage1 stage_1(renderer);
+            RunStage1 stage_1(renderer, Hard);
             state = stage_1.RunGame(renderer);
+        }
+        else if (state == Stage_2_Easy) // Stage 2
+        {
+
+        }
+        else if (state == Stage_2_Hard) 
+        {
+
         }
     }
 

@@ -9,6 +9,7 @@
 #include "TurretManager.h"
 #include "GameUI.h"
 
+enum Difficulty {Easy, Hard};
 
 class RunStage1 
 {
@@ -32,8 +33,11 @@ private:
 
     //GameUI
     InGameUI UserInterface;
+
+    //Difficulty
+    Difficulty Mode;
 public:
-    RunStage1(SDL_Renderer* renderer);
+    RunStage1(SDL_Renderer* renderer, Difficulty diff);
     GameState RunGame(SDL_Renderer* renderer);
     ~RunStage1();
 };

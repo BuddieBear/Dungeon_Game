@@ -9,7 +9,11 @@ void ghost::ghostInit( SDL_Texture* TextGhost, SDL_Rect camera)
 
 void ghost::RunGhost(SDL_Renderer* renderer, SDL_Rect camera, Player& player, float delta)
 {
-	if (!HitPlayer(player.player_box, camera))
+	if (this->alive == false)
+	{
+		return;
+	}
+	else if (!HitPlayer(player.player_box, camera))
 	{
 		Move(renderer, player.player_box, camera, delta);
 		Render(renderer, camera);

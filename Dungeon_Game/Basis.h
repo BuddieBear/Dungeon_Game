@@ -50,4 +50,4 @@ const int bullet_frame = 16; // 60fpsw
 //Player
 const int p_size = 48;
 
-enum GameState { MainMenu, SelectStage, Help, Exit, Stage_1_Easy, Stage_1_Hard, Stage_2 };
+enum GameState { MainMenu, SelectStage, Help, Exit, Stage_1_Easy, Stage_1_Hard, Stage_2_Easy, Stage_2_Hard };

@@ -11,13 +11,15 @@ private:
 	int speed = 3;
 	int x_speed =0, y_speed =0;
 	float angle =0;
-	bool alive = true;
+	
 
 	int GhostSize = 48;
 	SDL_Texture* GhostImg = nullptr;
 	SDL_Rect GhostHitbox;
 
 public:
+	bool alive = true;
+
 	void ghostInit(SDL_Texture* TextGhost, SDL_Rect camera);
 	void RunGhost(SDL_Renderer* renderer, SDL_Rect camera, Player& player, float delta);
 	void Move(SDL_Renderer* renderer, SDL_Rect player, SDL_Rect camera, float delta);

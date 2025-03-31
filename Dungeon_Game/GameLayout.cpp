@@ -30,17 +30,10 @@ vector<vector<int>> LoadCSVMap(const std::string& filename)
     return map;
 }
 
-void GetStageArray(vector <vector<int>> &Stage, int n_map)
+void GetStageArray(vector <vector<int>> &Stage, string MapFile)
 {
-    string map_file;
-    switch (n_map)
-    {
-        case 1: map_file = "Map/Stage_1_Map_Base_Map.csv"; break;
-        case 2: map_file = "Map/Stage_1_Map_Collider.csv"; break;
-        default: break;
-    }
-        
-    Stage = LoadCSVMap(map_file);
+    Stage = LoadCSVMap(MapFile);
+
     // Test array
     /*for (const auto& row : Stage) {
         for (int tile : row) {
