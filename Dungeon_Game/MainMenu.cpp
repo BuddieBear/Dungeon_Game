@@ -1,14 +1,18 @@
 #include "MainMenu.h"
 
 
-Menu::Menu(SDL_Renderer* renderer, TTF_Font* font)
-    : font(font)
+Menu::Menu(SDL_Renderer* renderer)
 {
+    font = TTF_OpenFont("UI_Elements/fonts/ShortBaby.ttf", 30);
+
     menuItems = { "Play   ", "Help    ", "Exit   " };
     this->background = LoadTexture("UI_Elements/Menu/MenuBG.png", renderer);
     BackgroundBox = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
     SelectBG = LoadTexture("UI_Elements/Menu/SelectStage.png", renderer);
     Manual = LoadTexture("UI_Elements/Menu/Manual.png", renderer);
+    Loser = LoadTexture("UI_Elements/Menu/Loser.png", renderer);
+    Winner = LoadTexture("UI_Elements/Menu/Winner.png", renderer);
+    this->DeathReason = { 500,200,300,100 };
 }
 
 Menu::~Menu() 
@@ -182,7 +186,6 @@ GameState Menu::ShowHelpMenu(SDL_Renderer* renderer)
             {
                 int mouseX = e.motion.x;
                 int mouseY = e.motion.y;
-                cerr << "Locate: " << mouseX << ", " << mouseY << endl;
                 if (mouseX > 470 && mouseX < 760 && mouseY > 635 && mouseY < 680)
                 {
                     return MainMenu;
@@ -199,4 +202,50 @@ GameState Menu::ShowHelpMenu(SDL_Renderer* renderer)
 void Menu::RenderHelpMenu(SDL_Renderer* renderer)
 {
     SDL_RenderCopy(renderer, this->Manual, NULL, &BackgroundBox);
+}
+//Conclusion
+GameState Menu::DisplayConclusion(SDL_Renderer* renderer, bool win, GameState currentstate)
+{
+    // Add Reason of death
+    if (win == true)
+    {
+        cerr << " I DIDD ";
+        SDL_RenderCopy(renderer, Winner, NULL, &BackgroundBox);
+    }
+    else
+    {
+        SDL_RenderCopy(renderer, Loser, NULL, &BackgroundBox);
+    }
+    SDL_RenderPresent(renderer);
+
+    SDL_Event e;
+    bool running = true;
+    while (running)
+    {
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT)
+            {
+                return Exit; // Exit the game
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
+            {
+                int mouseX = e.motion.x;
+                int mouseY = e.motion.y;
+                cerr << mouseX << ", " << mouseY << endl;
+                if (mouseX > 510 && mouseX < 740)
+                {
+                    if (mouseY > 390 && mouseY < 485)
+                    {
+                        return currentstate;
+                    }
+                    else if (mouseY > 540 && mouseY < 630)
+                    {
+                        return MainMenu;
+                    }
+                }
+            }
+        }
+    }
+    return Exit;
 }

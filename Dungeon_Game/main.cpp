@@ -8,27 +8,23 @@ int main(int argc, char* argv[])
     SDL_Window* window = MainGame.getWindow();
     SDL_Renderer* renderer = MainGame.getRenderer();
 
-    TTF_Font* Menufont = TTF_OpenFont("UI_Elements/fonts/ShortBaby.ttf", 30);
-
     GameState state = MainMenu;
-
-
 
     while (state != Exit)
     {
         if (state == MainMenu) // Main Menu
         {
-            Menu game(renderer, Menufont);
+            Menu game(renderer);
             state = game.ShowMainMenu(renderer);
         }
         else if (state == SelectStage)
         {
-            Menu game(renderer, Menufont);
+            Menu game(renderer);
             state = game.ShowSelectStage(renderer);
         }
         else if (state == Help)
         {
-            Menu game(renderer, Menufont);
+            Menu game(renderer);
             state = game.ShowHelpMenu(renderer);
         }
         else if (state == Stage_1_Easy) // Stage 1 

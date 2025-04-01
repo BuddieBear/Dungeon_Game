@@ -16,6 +16,7 @@ private:
 	SDL_Rect PlayerBarRect, PlayerHPRect,  RevolverRect;
 	SDL_Rect PlayerHP_NumRect, Ammo_NumRect;
 
+
 public:
 	void Init(SDL_Renderer* renderer);
 	void RenderPlayerBar(SDL_Renderer* renderer, Player& player);

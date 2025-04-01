@@ -36,6 +36,7 @@ private:
 
     //Difficulty
     Difficulty Mode;
+    GameState current;
 public:
     RunStage1(SDL_Renderer* renderer, Difficulty diff);
     GameState RunGame(SDL_Renderer* renderer);

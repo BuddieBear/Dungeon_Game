@@ -16,22 +16,26 @@ private:
     SDL_Rect BackgroundBox;
     TTF_Font* font;
     std::vector<std::string> menuItems;
-
     // Select stage
     SDL_Texture* SelectBG;
-
     // Help
     SDL_Texture* Manual;
+
+    //Conclusion
+    string ReasonOfDeath;
+    SDL_Rect DeathReason;
+    SDL_Texture* Winner;
+    SDL_Texture* Loser;
     
 public:
-    Menu(SDL_Renderer* renderer, TTF_Font* font);
+    Menu(SDL_Renderer* renderer);
     ~Menu();
 
     GameState ShowMainMenu(SDL_Renderer* renderer); // Displays Main Menu, return GameState
     GameState ShowSelectStage(SDL_Renderer* renderer);
     GameState ShowHelpMenu(SDL_Renderer* renderer);
     // Add Conclusion Menu
-    
+    GameState DisplayConclusion(SDL_Renderer* renderer, bool win, GameState current);
 private: 
     SDL_Texture* RenderText(SDL_Renderer* renderer, const std::string& text, SDL_Color color);
     void RenderMainMenu(SDL_Renderer* renderer, int Index);

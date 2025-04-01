@@ -1,4 +1,5 @@
 #include "GameRunner.h"
+#include "MainMenu.h"
 
 RunStage1::RunStage1(SDL_Renderer* renderer, Difficulty diff)
 {
@@ -19,11 +20,13 @@ RunStage1::RunStage1(SDL_Renderer* renderer, Difficulty diff)
 
     if (Mode == Hard) // Ghost, Tier 1 + Tier 2 turrets, No minions, Dense Map
     {
+        current = Stage_1_Hard;
         MapBaseFile = "Map/Stage_1_Map_Base_Hard.csv";
         MapColliderFile = "Map/Stage_1_Map_Collider_Hard.csv";
     }
     else if (Mode == Easy) //No ghost, All tier 1 turrets, No minions, Hollow Map
     {
+        current = Stage_1_Easy;
         MapBaseFile = "Map/Stage_1_Map_Base_Easy.csv";
         MapColliderFile = "Map/Stage_1_Map_Collider_Easy.csv";
         KillGhost.alive = false;
@@ -58,6 +61,8 @@ GameState RunStage1::RunGame(SDL_Renderer* renderer)
 
     while (running && player.alive)
     {
+        SDL_RenderClear(renderer);
+
         Uint64 CurrentTime = SDL_GetTicks();
         deltaTime = (CurrentTime - lastTime) / 1000.0f * 1.40; // Convert to seconds
         lastTime = CurrentTime;
@@ -83,10 +88,11 @@ GameState RunStage1::RunGame(SDL_Renderer* renderer)
 
         SDL_RenderPresent(renderer);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
+        
     }
 
-    //Add the display for win/loss
-    return MainMenu;
-    SDL_Delay(500);
+    // Win loss display
+    Menu Conclusion(renderer);
+    return Conclusion.DisplayConclusion(renderer, player.win, current);
+    
 }
