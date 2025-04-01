@@ -17,7 +17,7 @@ void initSDL(SDL_Window*& window, SDL_Renderer*& renderer, SDL_Surface*& surface
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
         logSDLError(std::cerr, "SDL_Init", true);
 
-    window = SDL_CreateWindow("Soul Noob (Dungeon game)", SDL_WINDOWPOS_CENTERED,
+    window = SDL_CreateWindow("Undead Alive", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
 

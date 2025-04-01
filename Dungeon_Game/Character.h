@@ -19,7 +19,7 @@ private:
     double x_speed =0, y_speed =0;
 
     int Cooldown = 500;
-    int ReloadTime = 1500;
+    int ReloadTime = 1500;  
     
     int MaxAmmo = 6;
 

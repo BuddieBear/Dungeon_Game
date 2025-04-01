@@ -267,7 +267,6 @@ void Player::LoadAnimation( SDL_Renderer* renderer)
     {
         string Animation_file = "Characters/Cowboy/Walk/Walk (" + to_string(i + 1) + ").png";
         this->Walk_Animation.push_back(LoadTexture(Animation_file, renderer));
-        cerr << Animation_file << endl;
     }
 }
 
@@ -330,14 +329,13 @@ void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& Collid
 {
     int new_x = this->x + x_plus;
     int new_y = this->y + y_plus;
-
     // Check the new position in tile coordinates
     int tile_x = new_x / TILE_SIZE;
     int tile_y = new_y / TILE_SIZE;
 
     // Create the hitbox for the new position BEFORE moving
-    SDL_Rect NewHitbox = { new_x - 36 / 2, new_y - 36 / 2, 36, 36 };
-
+    SDL_Rect NewHitbox = { new_x - 24 / 2, new_y - 36 / 2, 24, 36 };
+    
     // Check collision BEFORE updating the position
     if (Check_Surrounding_Player(NewHitbox, tile_x, tile_y, ColliderMap)) 
     {
@@ -364,7 +362,7 @@ bool Player::Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, 
             int TileNum = ColliderMap[y0][x0];
             if (TileNum != 0 && TileNum != Opened_wood_chest)
             {
-                SDL_Rect TempTile = { x0 * TILE_SIZE, y0 * TILE_SIZE, TILE_SIZE, TILE_SIZE };
+                SDL_Rect TempTile = { x0 * TILE_SIZE + TILE_SIZE/2, y0 * TILE_SIZE , TILE_SIZE, TILE_SIZE };
                 if (CheckCollisionRect(NewHitbox, TempTile))
                 {
                     if (TileNum == silver_key)
@@ -403,30 +401,34 @@ bool Player::Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, 
                         int odd = rand() % 2;
                         ColliderMap[y0][x0] = Opened_wood_chest;
 
-                        if (odd == 0)
+                        if ( odd <3 ) // 30%
                         {
-                            cerr << "Oopsie Daisy" << endl;
-                            this->alive = false;
+                            cerr << "Reward: Speed boost";
+                            this->speed *= 1.25;
                         }
-                        else if (odd == 1)
+                        else if (odd == 3) // 10%
                         {
                             cerr << "Reward: 1Mil bullets" << endl;
                             this->bullets.MaxAmmo = 1000000;
                             this->bullets.ammo = 1000000;
                         }
-                        else if (odd <6)
+                        else if (odd < 6)  // 20%
                         {
-                            cerr << "Reward: 20Hp" << endl;
-                            this->MaxHp = 20;
-                            this->hp = 20;
+                            cerr << "Reward: +5 Max Health" << endl;
+                            this->MaxHp += 5;
+                            this->hp = this-> MaxHp;
                         }
-                        else
+                        else if (odd < 8) // 20%
                         {
-                            cerr << "Reward: Refill HP and Ammo" << endl;
-                            this->hp = 10;
-                            this->bullets.ammo = 7;
+                            cerr << "Reward: Fast FireRate" << endl;
+                            this->bullets.Cooldown *= 0.8;
                         }
-                        // add more rewards
+                        else // 20%
+                        {
+                            cerr << "Debuff: Fatigue" << endl;
+                            this->speed *= 0.8;  // 1.25x slower
+                            this->bullets.Cooldown *= 1.25;  // 1.25x slower
+                        }
                     }
                     else if (TileNum == wall_fire || TileNum == wall_turret_1 || TileNum == wall_turret_2 || TileNum == laser_turret_1 || TileNum == laser_turret_2)
                     {
@@ -454,11 +456,9 @@ void Player::RenderCharacter(  SDL_Renderer* renderer, int CurrentFrame, bool Fa
     if (FaceRight) // >D
     {
         SDL_RenderCopy(renderer, Walk_Animation[CurrentFrame], NULL, &destRect);
-        SDL_RenderDrawRect(renderer, &destRect);
     }
     else // A<
     {
         SDL_RenderCopyEx(renderer, Walk_Animation[CurrentFrame], NULL, &destRect, 0, NULL, SDL_FLIP_HORIZONTAL);
-        SDL_RenderDrawRect(renderer, &destRect);
     }
 }

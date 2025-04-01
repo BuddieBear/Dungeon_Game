@@ -139,6 +139,7 @@
     <ClCompile Include="GameUI.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MainMenu.h" />
+    <ClCompile Include="Minion.cpp" />
     <ClCompile Include="TurretManager.cpp" />
     <ClCompile Include="GameRunner.cpp" />
     <ClCompile Include="GameLayout.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameUI.h" />
+    <ClInclude Include="Minion.h" />
     <ClInclude Include="TurretManager.h" />
     <ClInclude Include="GameRunner.h" />
     <ClInclude Include="GameLayout.h" />

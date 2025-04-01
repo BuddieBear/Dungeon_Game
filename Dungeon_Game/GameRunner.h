@@ -11,18 +11,19 @@
 
 enum Difficulty {Easy, Hard};
 
-class RunStage1 
+class RunStage
 {
 private:
-    SDL_Rect camera = { start_1_x - SCREEN_WIDTH/2, start_1_y -SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_Rect camera;
     float deltaTime = 0;
     bool running = true;
+
     // character player
     Player player;
 
     //Layout1 map
     vector<SDL_Texture*> Tile_Array;
-    vector<vector<int>> stage_1, stage_1_collider;
+    vector<vector<int>> stage_map, stage_collider;
 
     TurretManager Turrets;
     SDL_Texture* Laser_Texture;
@@ -38,7 +39,8 @@ private:
     Difficulty Mode;
     GameState current;
 public:
-    RunStage1(SDL_Renderer* renderer, Difficulty diff);
+    RunStage(SDL_Renderer* renderer, int stage, Difficulty diff);
     GameState RunGame(SDL_Renderer* renderer);
-    ~RunStage1();
+    ~RunStage();
 };
+

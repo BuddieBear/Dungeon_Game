@@ -20,6 +20,8 @@ Menu::~Menu()
     SDL_DestroyTexture(this->background);
     SDL_DestroyTexture(this->SelectBG);
     SDL_DestroyTexture(this->Manual);
+    SDL_DestroyTexture(this->Winner);
+    SDL_DestroyTexture(this->Loser);
 }
 
 SDL_Texture* Menu::RenderText(SDL_Renderer* renderer, const std::string& text, SDL_Color color)
@@ -126,7 +128,6 @@ GameState Menu::ShowSelectStage(SDL_Renderer* renderer)
             {
                 int mouseX = e.motion.x;
                 int mouseY = e.motion.y;
-                cerr << "x,y: " << mouseX << ", " << mouseY << endl;
 
                 if (mouseX > 250 && mouseX < 470)
                 {
@@ -209,7 +210,6 @@ GameState Menu::DisplayConclusion(SDL_Renderer* renderer, bool win, GameState cu
     // Add Reason of death
     if (win == true)
     {
-        cerr << " I DIDD ";
         SDL_RenderCopy(renderer, Winner, NULL, &BackgroundBox);
     }
     else
@@ -232,7 +232,6 @@ GameState Menu::DisplayConclusion(SDL_Renderer* renderer, bool win, GameState cu
             {
                 int mouseX = e.motion.x;
                 int mouseY = e.motion.y;
-                cerr << mouseX << ", " << mouseY << endl;
                 if (mouseX > 510 && mouseX < 740)
                 {
                     if (mouseY > 390 && mouseY < 485)

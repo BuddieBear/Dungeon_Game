@@ -23,8 +23,8 @@ const int TILE_SIZE = 32;
 const int start_1_x = 2000;
 const int start_1_y = 5230;
 
-const int start_2_x = 0;
-const int start_2_y = 0;
+const int start_2_x = 2320;
+const int start_2_y = 3900;
 
 //Objectives decals
 const int TileCount = 30;
@@ -49,5 +49,6 @@ const int bullet_frame = 16; // 60fpsw
 
 //Player
 const int p_size = 48;
+
 
 enum GameState { MainMenu, SelectStage, Help, Exit, Stage_1_Easy, Stage_1_Hard, Stage_2_Easy, Stage_2_Hard };
