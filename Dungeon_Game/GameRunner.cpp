@@ -88,6 +88,9 @@ RunStage::~RunStage()
 
 GameState RunStage::RunGame(SDL_Renderer* renderer)
 {
+    AudioSet Audio;
+    Audio.PlayAmbience();
+
     srand(time(0));
     Uint64 lastTime = SDL_GetTicks();
 
@@ -106,8 +109,8 @@ GameState RunStage::RunGame(SDL_Renderer* renderer)
         SDL_Delay(6);
 
         //Player Related Controls
-        player.bullets.Shoot_bullets(renderer, stage_collider, Turrets.Turret_Wall_location, Turrets.Turret_Laser_location, deltaTime, camera, false);
-        player.Handle_Movement(renderer, stage_collider,Turrets.Turret_Wall_location, Turrets.Turret_Laser_location, deltaTime, camera);
+        player.bullets.Shoot_bullets(renderer, stage_collider, Turrets.Turret_Wall_location, Turrets.Turret_Laser_location, deltaTime, camera, Audio, false);
+        player.Handle_Movement(renderer, stage_collider,Turrets.Turret_Wall_location, Turrets.Turret_Laser_location, deltaTime, camera, Audio);
 
         //Turrets
         Turrets.RunTurrets(renderer, camera, stage_collider, Laser_Texture, deltaTime, player);

@@ -8,6 +8,7 @@
 #include "TurretManager.h"
 #include "GameUI.h"
 #include "MinionManager.h"
+#include "AudioSet.h"
 
 enum Difficulty {Easy, Hard};
 

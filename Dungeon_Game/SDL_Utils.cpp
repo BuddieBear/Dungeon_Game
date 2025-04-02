@@ -41,6 +41,13 @@ void initSDL(SDL_Window*& window, SDL_Renderer*& renderer, SDL_Surface*& surface
     {
         logSDLError(cerr, "Failed to initialize SDL_ttf: ", true);
     }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) 
+    {
+        std::cerr << "SDL_mixer could not initialize! Error: " << Mix_GetError() << std::endl;
+        return;
+    }
+
 }
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer)

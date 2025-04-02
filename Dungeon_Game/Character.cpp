@@ -24,14 +24,15 @@ void revolver::render(SDL_Renderer* renderer, const SDL_Rect& Dest)
     
 }
 
-void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, const SDL_Rect& camera, bool JustShot)
+void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, const SDL_Rect& camera, AudioSet& Audio, bool JustShot)
 {
     int mouseX, mouseY;
     Uint32 mouseButtons = SDL_GetMouseState(&mouseX, &mouseY);
     Uint32 currentTime = SDL_GetTicks();
 
-    if (ammo == 0)
+    if (ammo <= 0 && !EmptyMag)
     {
+        Audio.PlayReload();
         EmptyMag = true;
     }
 
@@ -43,9 +44,10 @@ void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& Collid
         Updated_shot = false;
         OnCooldown = true;
 
-
         this ->x = camera.x + SCREEN_WIDTH/2 - TILE_SIZE/2;
         this ->y = camera.y + SCREEN_HEIGHT/2 - TILE_SIZE/2;
+
+        Audio.PlayGunShot();
     }
 
 
@@ -270,7 +272,7 @@ void Player::LoadAnimation( SDL_Renderer* renderer)
     }
 }
 
-void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, SDL_Rect& camera)
+void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, SDL_Rect& camera, AudioSet& Audio)
 {
     /*if (this->hp == 0)
     {
@@ -296,7 +298,7 @@ void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& Colli
         }
         if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
         {
-            this->bullets.Shoot_bullets(renderer, ColliderMap, TurretWallLocation, Laser_Turrets, delta, camera, true);
+            this->bullets.Shoot_bullets(renderer, ColliderMap, TurretWallLocation, Laser_Turrets, delta, camera, Audio, true);
         }
     }
     const Uint8* keystates = SDL_GetKeyboardState(NULL);
@@ -313,7 +315,7 @@ void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& Colli
         speed_y *= 0.7071;
         speed_x *= 0.7071;
     }
-    Check_Collision(speed_x, speed_y, ColliderMap, camera);
+    Check_Collision(speed_x, speed_y, ColliderMap, camera, Audio);
 
     //Animation (24 fps) 
     Uint32 currentTime = SDL_GetTicks(); 
@@ -325,7 +327,7 @@ void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& Colli
     //Updates frames
     RenderCharacter(renderer, CurrentFrame, Right);
 }
-void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& ColliderMap, SDL_Rect& camera)
+void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& ColliderMap, SDL_Rect& camera, AudioSet& Audio)
 {
     int new_x = this->x + x_plus;
     int new_y = this->y + y_plus;
@@ -337,7 +339,7 @@ void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& Collid
     SDL_Rect NewHitbox = { new_x - 24 / 2, new_y - 36 / 2, 24, 36 };
     
     // Check collision BEFORE updating the position
-    if (Check_Surrounding_Player(NewHitbox, tile_x, tile_y, ColliderMap)) 
+    if (Check_Surrounding_Player(NewHitbox, tile_x, tile_y, ColliderMap, Audio)) 
     {
         return; // Collision detected, don't move
     }
@@ -351,7 +353,7 @@ void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& Collid
     camera.y = this->y - SCREEN_HEIGHT / 2;
 }
 
-bool Player::Check_Surrounding_Player(const SDL_Rect& NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap)
+bool Player::Check_Surrounding_Player(const SDL_Rect& NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap, AudioSet& Audio)
 {
     for (int i = -1; i <= 1; i++)
     {
@@ -367,6 +369,7 @@ bool Player::Check_Surrounding_Player(const SDL_Rect& NewHitbox, int new_x, int 
                 {
                     if (TileNum == silver_key)
                     {
+                        Audio.PlayGate();
                         for (auto& row : ColliderMap)
                         {
                             for (auto& tile : row)
@@ -377,9 +380,11 @@ bool Player::Check_Surrounding_Player(const SDL_Rect& NewHitbox, int new_x, int 
                                 }
                             }
                         }
+
                     }
                     else if (TileNum == gold_key)
                     {
+                        Audio.PlayGate();
                         for (auto& row : ColliderMap)
                         {
                             for (auto& tile : row)

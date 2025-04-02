@@ -3,6 +3,7 @@
 #include "Basis.h"
 #include "SDL_Utils.h"
 #include "Turrets.h"
+#include "AudioSet.h"
 
 struct Turret_Laser;
 struct Turret_Wall;
@@ -43,7 +44,7 @@ public:
     friend class Player;
     void get_revolver(SDL_Texture* bulletimg);
     void render(SDL_Renderer* renderer, const SDL_Rect& Dest);
-    void Shoot_bullets(SDL_Renderer* renderer,  vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, const SDL_Rect& camera, bool JustShot );
+    void Shoot_bullets(SDL_Renderer* renderer,  vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, const SDL_Rect& camera, AudioSet& Audio, bool JustShot );
     bool Check_BulletHit(vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets);
     bool Check_Surrounding_Bullet(int n_decal, int a, int b, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets);
     ~revolver();
@@ -69,10 +70,10 @@ public:
     void PlayerInit(SDL_Texture* playerText, SDL_Texture* BulletText, SDL_Renderer* renderer);
     void LoadAnimation(SDL_Renderer* renderer);
     
-    void Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets,const float& delta, SDL_Rect& camera);
+    void Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets,const float& delta, SDL_Rect& camera, AudioSet& Audio);
     void RenderCharacter(SDL_Renderer* renderer, int CurrentFrame, bool FaceRight);
-    void Check_Collision(int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera);
-    bool Check_Surrounding_Player(const SDL_Rect& NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap);
+    void Check_Collision(int x_plus, int y_plus, vector <vector<int>>& ColliderMap, SDL_Rect& camera, AudioSet& Audio);
+    bool Check_Surrounding_Player(const SDL_Rect& NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap, AudioSet& Audio);
 
     ~Player();
 };
