@@ -8,7 +8,7 @@ void Laser::Render(SDL_Renderer* renderer, SDL_Texture* LaserImg)
     SDL_RenderCopyEx(renderer, LaserImg, NULL, &this->ShotHitbox, this->angle*(180.0 / M_PI) +90, NULL,SDL_FLIP_NONE);
 }
 
-void Turret_Laser::Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, float delta, Player& player)
+void Turret_Laser::Turret_Shoot(SDL_Renderer* renderer, const SDL_Rect& camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, const float& delta, Player& player)
 {
     int RenderFrame = 42; // 24 frames
 
@@ -67,7 +67,7 @@ void Turret_Laser::Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, vector<
     if(this->shot.shooting)
         this->shot.Render(renderer, laserImg);
 }
-bool Turret_Laser::Bullet_Hit(SDL_Rect camera, vector<vector<int>>& ColliderMap, Player& player)
+bool Turret_Laser::Bullet_Hit(const SDL_Rect& camera, vector<vector<int>>& ColliderMap, Player& player)
 {
     // Out of screen check
     if (this->shot.ShotHitbox.x> SCREEN_WIDTH || this->shot.ShotHitbox.y > SCREEN_HEIGHT || this->shot.ShotHitbox.x < 0 || this->shot.ShotHitbox.y < 0)
@@ -106,7 +106,7 @@ bool Turret_Laser::Bullet_Hit(SDL_Rect camera, vector<vector<int>>& ColliderMap,
     return false;
 }
 
-bool Turret_Laser::Check_Surrounding_Laser(int n_decal, int a, int b, vector<vector<int>>& ColliderMap)
+bool Turret_Laser::Check_Surrounding_Laser(const int& n_decal, const int& a, const int& b, vector<vector<int>>& ColliderMap)
 {
     SDL_Rect TempTile = { 0, 0, TILE_SIZE, TILE_SIZE };
     SDL_Rect shot_hitbox = { shot.x - TILE_SIZE / 2, shot.y - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE };

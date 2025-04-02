@@ -30,7 +30,7 @@ vector<vector<int>> LoadCSVMap(const std::string& filename)
     return map;
 }
 
-void GetStageArray(vector <vector<int>> &Stage, string MapFile)
+void GetStageArray(vector <vector<int>> &Stage, const string& MapFile)
 {
     Stage = LoadCSVMap(MapFile);
 
@@ -53,7 +53,7 @@ void LoadTileTextures(SDL_Renderer* renderer, vector<SDL_Texture*> &TileTextures
     }
 }
 
-void RenderStage(SDL_Renderer* renderer, vector<vector<int>>& tileMap, Player& player, const vector<SDL_Texture*> &TileTextures)
+void RenderStage(SDL_Renderer* renderer,const vector<vector<int>>& tileMap, const Player& player, const vector<SDL_Texture*> &TileTextures)
 {
     
     SDL_Rect destRect;
@@ -81,7 +81,7 @@ void RenderStage(SDL_Renderer* renderer, vector<vector<int>>& tileMap, Player& p
     }
 }
 
-void RenderCollider(SDL_Renderer* renderer, vector<vector<int>>& tileMap, Player& player, const vector<SDL_Texture*>& TileTextures)
+void RenderCollider(SDL_Renderer* renderer, const vector<vector<int>>& tileMap, const Player& player, const vector<SDL_Texture*>& TileTextures)
 {
 
     SDL_Rect destRect;

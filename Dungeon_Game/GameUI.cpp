@@ -18,7 +18,7 @@ void InGameUI::Init(SDL_Renderer* renderer)
 	this ->Ammo_NumRect = { 200, 80, 35, 60 };
 }
 
-void InGameUI::RenderPlayerBar(SDL_Renderer* renderer, Player& player)
+void InGameUI::RenderPlayerBar(SDL_Renderer* renderer, const Player& player)
 {
 	SDL_RenderCopy(renderer, PlayerBarBackground, NULL, &PlayerBarRect);
 	//HP Bar

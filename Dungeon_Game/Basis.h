@@ -41,7 +41,7 @@ const int laser_turret_1 = 25;
 const int laser_turret_2 = 26;
 const int Unopened_wood_chest = 28;
 const int Opened_wood_chest = 29;
-
+const int Minion_Spawn = 100;
 const int victory_crown = 27;
 //Animation timing
 const int Delay_Frame = 42; // 1000/24 = 42(ms) or 24 fps

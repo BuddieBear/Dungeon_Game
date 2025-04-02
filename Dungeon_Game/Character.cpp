@@ -13,7 +13,7 @@ void revolver::get_revolver(SDL_Texture* bulletimg)
     Img = bulletimg;
 }
 
-void revolver::render(SDL_Renderer* renderer, SDL_Rect Dest)
+void revolver::render(SDL_Renderer* renderer, const SDL_Rect& Dest)
 {
     //  Add condition that it is still shooting
     if (shooting)
@@ -24,7 +24,7 @@ void revolver::render(SDL_Renderer* renderer, SDL_Rect Dest)
     
 }
 
-void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect camera, bool JustShot)
+void revolver::Shoot_bullets(SDL_Renderer* renderer, vector<vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, const SDL_Rect& camera, bool JustShot)
 {
     int mouseX, mouseY;
     Uint32 mouseButtons = SDL_GetMouseState(&mouseX, &mouseY);
@@ -270,7 +270,7 @@ void Player::LoadAnimation( SDL_Renderer* renderer)
     }
 }
 
-void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, float delta, SDL_Rect& camera)
+void Player::Handle_Movement(SDL_Renderer* renderer, vector <vector<int>>& ColliderMap, vector<Turret_Wall>& TurretWallLocation, vector<Turret_Laser>& Laser_Turrets, const float& delta, SDL_Rect& camera)
 {
     /*if (this->hp == 0)
     {
@@ -351,7 +351,7 @@ void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& Collid
     camera.y = this->y - SCREEN_HEIGHT / 2;
 }
 
-bool Player::Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap)
+bool Player::Check_Surrounding_Player(const SDL_Rect& NewHitbox, int new_x, int new_y, vector<vector<int>>& ColliderMap)
 {
     for (int i = -1; i <= 1; i++)
     {
@@ -398,12 +398,12 @@ bool Player::Check_Surrounding_Player(SDL_Rect NewHitbox, int new_x, int new_y, 
                     }
                     else if (TileNum == Unopened_wood_chest)
                     {
-                        int odd = rand() % 2;
+                        int odd = rand() % 10;
                         ColliderMap[y0][x0] = Opened_wood_chest;
 
                         if ( odd <3 ) // 30%
                         {
-                            cerr << "Reward: Speed boost";
+                            cerr << "Reward: Speed boost" << endl;
                             this->speed *= 1.25;
                         }
                         else if (odd == 3) // 10%
@@ -451,7 +451,6 @@ void Player::RenderCharacter(  SDL_Renderer* renderer, int CurrentFrame, bool Fa
 
     destRect.x = SCREEN_WIDTH / 2 - p_size/2;
     destRect.y = SCREEN_HEIGHT / 2 - p_size/2;
-
 
     if (FaceRight) // >D
     {

@@ -1,11 +1,11 @@
 #include "TurretManager.h"
 
-void TurretManager::RunTurrets(SDL_Renderer* renderer, SDL_Rect camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, float delta, Player& player)
+void TurretManager::RunTurrets(SDL_Renderer* renderer, const SDL_Rect& camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, const float& delta, Player& player)
 {
     this->Turret_Connect(camera, ColliderMap);
     this->All_Turret_Shoot(renderer, camera, ColliderMap, laserImg, delta, player);
 }
-void TurretManager::Store_Turret_Wall_Location(vector<vector<int>> ColliderMap)
+void TurretManager::Store_Turret_Wall_Location(const vector<vector<int>>& ColliderMap)
 {
     int n_rows = ColliderMap.size();
     int n = ColliderMap[0].size();
@@ -38,7 +38,7 @@ void TurretManager::Store_Turret_Wall_Location(vector<vector<int>> ColliderMap)
 }
 
 
-void TurretManager::Turret_Connect(SDL_Rect camera, vector<vector<int>>& ColliderMap)
+void TurretManager::Turret_Connect(const SDL_Rect& camera, vector<vector<int>>& ColliderMap)
 {
     int x0 = camera.x / TILE_SIZE;
     int y0 = camera.y / TILE_SIZE;
@@ -98,7 +98,7 @@ void TurretManager::Turret_Connect(SDL_Rect camera, vector<vector<int>>& Collide
 }
 
 
-void TurretManager::Store_Turret_Laser_Location(vector<vector<int>>& ColliderMap)
+void TurretManager::Store_Turret_Laser_Location(const vector<vector<int>>& ColliderMap)
 {
     int n_rows = ColliderMap.size();
     int n = ColliderMap[0].size();
@@ -130,7 +130,7 @@ void TurretManager::Store_Turret_Laser_Location(vector<vector<int>>& ColliderMap
         }
     }
 }
-void TurretManager::All_Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, float delta, Player& player)
+void TurretManager::All_Turret_Shoot(SDL_Renderer* renderer, const SDL_Rect& camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, const float& delta, Player& player)
 {
     for (auto& turret : this->Turret_Laser_location)
     {

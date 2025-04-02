@@ -37,9 +37,9 @@ struct Turret_Laser
 	int x, y; // CSV location 
 	Laser shot;
 
-	void Turret_Shoot(SDL_Renderer* renderer, SDL_Rect camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, float delta, Player& player);
-	bool Bullet_Hit(SDL_Rect camera, vector<vector<int>>& ColliderMap, Player& player);
-	bool Check_Surrounding_Laser(int n_decal, int a, int b, vector<vector<int>>& ColliderMap);
+	void Turret_Shoot(SDL_Renderer* renderer, const SDL_Rect& camera, vector<vector<int>>& ColliderMap, SDL_Texture* laserImg, const float& delta, Player& player);
+	bool Bullet_Hit(const SDL_Rect& camera, vector<vector<int>>& ColliderMap, Player& player);
+	bool Check_Surrounding_Laser(const int& n_decal, const int& a, const int& b, vector<vector<int>>& ColliderMap);
 
 };
 

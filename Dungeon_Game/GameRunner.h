@@ -4,10 +4,10 @@
 #include "SDL_Utils.h"
 #include "Character.h"
 #include "GameLayout.h"
-#include "Turrets.h"
 #include "Ghost.h"
 #include "TurretManager.h"
 #include "GameUI.h"
+#include "MinionManager.h"
 
 enum Difficulty {Easy, Hard};
 
@@ -38,6 +38,10 @@ private:
     //Difficulty
     Difficulty Mode;
     GameState current;
+
+    //Minion
+    MinionManager Minions;
+    
 public:
     RunStage(SDL_Renderer* renderer, int stage, Difficulty diff);
     GameState RunGame(SDL_Renderer* renderer);

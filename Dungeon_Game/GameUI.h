@@ -19,6 +19,6 @@ private:
 
 public:
 	void Init(SDL_Renderer* renderer);
-	void RenderPlayerBar(SDL_Renderer* renderer, Player& player);
+	void RenderPlayerBar(SDL_Renderer* renderer, const Player& player);
 	//maybe minimap
 };

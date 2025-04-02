@@ -6,6 +6,7 @@ RunStage::RunStage(SDL_Renderer* renderer, int stage, Difficulty diff)
     string MapBaseFile;
     string MapColliderFile;
 
+    
     Mode = diff;
 
     // Set up
@@ -31,6 +32,9 @@ RunStage::RunStage(SDL_Renderer* renderer, int stage, Difficulty diff)
     else if (stage == 2)
     {
         camera = { start_2_x - SCREEN_WIDTH / 2, start_2_y - SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT };
+        player.MaxHp = 50;
+        player.hp = 50;
+
         player.x = start_2_x;
         player.y = start_2_y;
         if (Mode == Hard) // Ghost, Tier 1 + Tier 2 turrets, No minions, Dense Map
@@ -47,12 +51,12 @@ RunStage::RunStage(SDL_Renderer* renderer, int stage, Difficulty diff)
             KillGhost.alive = false;
         }
     }
-    
+
     player.PlayerInit(LoadTexture("Characters/Cowboy/Main.png", renderer), LoadTexture("Images/Bullet.png", renderer), renderer);
 
     //Ghost
     GhostImg = LoadTexture("Characters/Ghost/Ghost.png", renderer);
-    KillGhost.ghostInit(GhostImg, camera);
+    KillGhost.ghostInit(player.x + 600, player.y + 400, GhostImg, camera);
 
     // Load Stage Texture
     LoadTileTextures(renderer, Tile_Array);
@@ -64,6 +68,9 @@ RunStage::RunStage(SDL_Renderer* renderer, int stage, Difficulty diff)
     Turrets.Store_Turret_Wall_Location( stage_collider );
     Turrets.Store_Turret_Laser_Location( stage_collider );
     Laser_Texture = LoadTexture("Images/Laser.png", renderer);
+
+    //Minion
+    Minions.GetMelee_Minion(stage_collider, LoadTexture("Characters/Minions/Melee/Melee_Minion.png", renderer), camera);
 
     //GameUI
     UserInterface.Init(renderer);
@@ -97,6 +104,7 @@ GameState RunStage::RunGame(SDL_Renderer* renderer)
         RenderCollider(renderer, stage_collider, player, Tile_Array);
 
         SDL_Delay(6);
+
         //Player Related Controls
         player.bullets.Shoot_bullets(renderer, stage_collider, Turrets.Turret_Wall_location, Turrets.Turret_Laser_location, deltaTime, camera, false);
         player.Handle_Movement(renderer, stage_collider,Turrets.Turret_Wall_location, Turrets.Turret_Laser_location, deltaTime, camera);
@@ -104,8 +112,13 @@ GameState RunStage::RunGame(SDL_Renderer* renderer)
         //Turrets
         Turrets.RunTurrets(renderer, camera, stage_collider, Laser_Texture, deltaTime, player);
 
+        //Minions
+        Minions.Run_Melee_Minion(renderer, camera, player, stage_collider, deltaTime);
+
         //Ghost
         KillGhost.RunGhost(renderer, camera, player, deltaTime);
+
+        
 
         //Render UI elements
         UserInterface.RenderPlayerBar(renderer, player);
