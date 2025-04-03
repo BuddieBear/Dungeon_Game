@@ -37,6 +37,7 @@ public:
     GameState ShowHelpMenu(SDL_Renderer* renderer, AudioSet& Audio);
     // Add Conclusion Menu
     GameState DisplayConclusion(SDL_Renderer* renderer, bool win, GameState current, AudioSet& Audio);
+
 private: 
     SDL_Texture* RenderText(SDL_Renderer* renderer, const std::string& text, SDL_Color color);
     void RenderMainMenu(SDL_Renderer* renderer, int Index);

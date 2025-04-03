@@ -6,7 +6,6 @@ RunStage::RunStage(SDL_Renderer* renderer, int stage, Difficulty diff)
     string MapBaseFile;
     string MapColliderFile;
 
-    
     Mode = diff;
 
     // Set up

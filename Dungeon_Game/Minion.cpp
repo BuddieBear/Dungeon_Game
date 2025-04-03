@@ -85,7 +85,7 @@ bool Melee_Minion::HitPlayer(Player& player, const SDL_Rect& camera)
 	{
 		return true;
 	}
-	else if (CheckCollisionRect(this->Hitbox, player.bullets.shot_hitbox))
+	else if (CheckCollisionRect(this->Hitbox, player.bullets.shot_hitbox) && player.bullets.shooting)
 	{
 		player.bullets.shooting = false;
 		this->alive = false;
