@@ -2,6 +2,7 @@
 - Có thể thêm 1 số chức năng khác: Range minion, Tạo boss, Tạo các vũ khí khác nhau.
 
 Có 2 màn: gồm 2 chế độ (Hard/Easy: Map giống nhau, cấu trúc phòng khác nhau)
+
 Stage 1:
 
 - Easy: (★☆☆☆☆)
