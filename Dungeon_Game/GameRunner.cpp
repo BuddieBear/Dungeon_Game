@@ -86,9 +86,8 @@ RunStage::~RunStage()
     for (auto tex : Tile_Array) SDL_DestroyTexture(tex);
 }
 
-GameState RunStage::RunGame(SDL_Renderer* renderer)
+GameState RunStage::RunGame(SDL_Renderer* renderer, AudioSet& Audio)
 {
-    AudioSet Audio;
     Audio.PlayAmbience();
 
     srand(time(0));
@@ -133,7 +132,8 @@ GameState RunStage::RunGame(SDL_Renderer* renderer)
     }
 
     // Win loss display
+    Mix_HaltMusic();
     Menu Conclusion(renderer);
-    return Conclusion.DisplayConclusion(renderer, player.win, current);
+    return Conclusion.DisplayConclusion(renderer, player.win, current, Audio);
     
 }

@@ -45,7 +45,7 @@ private:
     
 public:
     RunStage(SDL_Renderer* renderer, int stage, Difficulty diff);
-    GameState RunGame(SDL_Renderer* renderer);
+    GameState RunGame(SDL_Renderer* renderer, AudioSet& Audio);
     ~RunStage();
 };
 

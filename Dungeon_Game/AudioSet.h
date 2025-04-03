@@ -8,6 +8,7 @@ private:
 	Mix_Chunk* Gunshot;
 	Mix_Chunk* Reload;
 	Mix_Chunk* Gate;
+	Mix_Chunk* Button;
 	Mix_Music* Ambience;
 
 public:
@@ -16,5 +17,6 @@ public:
 	void PlayGunShot();
 	void PlayReload();
 	void PlayGate();
+	void PlayButton();
 	void PlayAmbience();
 };

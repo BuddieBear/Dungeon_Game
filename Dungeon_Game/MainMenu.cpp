@@ -57,7 +57,7 @@ void Menu::RenderMainMenu(SDL_Renderer * renderer, int Index)
     }
 }
 
-GameState Menu::ShowMainMenu(SDL_Renderer* renderer) 
+GameState Menu::ShowMainMenu(SDL_Renderer* renderer, AudioSet& Audio)
 {
     SDL_Event e;
     bool running = true;
@@ -90,17 +90,21 @@ GameState Menu::ShowMainMenu(SDL_Renderer* renderer)
             {
                 if (Index == 0) 
                 { // Select Stage
+                    Audio.PlayButton();
                     return SelectStage;
                 }
                 else if (Index == 1)
                 {
+                    Audio.PlayButton();
                     return Help;
                 }
                 else if (Index == 2) 
                 { // Exit button
+                    Audio.PlayButton();
                     return Exit;
                 }
             }
+            SDL_Delay(16);
         }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -112,7 +116,7 @@ GameState Menu::ShowMainMenu(SDL_Renderer* renderer)
 }
 
 // Select stage
-GameState Menu::ShowSelectStage(SDL_Renderer* renderer)
+GameState Menu::ShowSelectStage(SDL_Renderer* renderer, AudioSet& Audio)
 {
     SDL_Event e;
     bool running = true;
@@ -133,10 +137,12 @@ GameState Menu::ShowSelectStage(SDL_Renderer* renderer)
                 {
                     if (mouseY > 240 && mouseY < 290) // Top Left
                     {
+                        Audio.PlayButton();
                         return Stage_1_Easy;
                     }
                     else if (mouseY > 415 && mouseY < 460) // Bot Left
                     {
+                        Audio.PlayButton();
                         return Stage_2_Easy;
                     }
                 }
@@ -144,15 +150,18 @@ GameState Menu::ShowSelectStage(SDL_Renderer* renderer)
                 {
                     if (mouseY > 240 && mouseY < 290) // Top Right
                     {
+                        Audio.PlayButton();
                         return Stage_1_Hard;
                     }
                     else if (mouseY > 415 && mouseY < 460) // Bot Right
                     {
+                        Audio.PlayButton();
                         return Stage_2_Hard;
                     }
                 }
                 if (mouseX > 480 && mouseX < 770 && mouseY > 595 && mouseY < 650)
                 {
+                    Audio.PlayButton();
                     return MainMenu;
                 }
             }
@@ -160,6 +169,7 @@ GameState Menu::ShowSelectStage(SDL_Renderer* renderer)
         SDL_RenderClear(renderer);
         RenderSelectStage(renderer);
         SDL_RenderPresent(renderer);
+        SDL_Delay(16);
     }
     return Exit;
 }
@@ -171,7 +181,7 @@ void Menu::RenderSelectStage(SDL_Renderer* renderer)
 
 
 // Manual
-GameState Menu::ShowHelpMenu(SDL_Renderer* renderer)
+GameState Menu::ShowHelpMenu(SDL_Renderer* renderer, AudioSet& Audio)
 {
     SDL_Event e;
     bool running = true;
@@ -189,6 +199,7 @@ GameState Menu::ShowHelpMenu(SDL_Renderer* renderer)
                 int mouseY = e.motion.y;
                 if (mouseX > 470 && mouseX < 760 && mouseY > 635 && mouseY < 680)
                 {
+                    Audio.PlayButton();
                     return MainMenu;
                 }
             }
@@ -196,6 +207,7 @@ GameState Menu::ShowHelpMenu(SDL_Renderer* renderer)
         SDL_RenderClear(renderer);
         RenderHelpMenu(renderer);
         SDL_RenderPresent(renderer);
+        SDL_Delay(16);
     }
     return Exit;
 }
@@ -205,7 +217,7 @@ void Menu::RenderHelpMenu(SDL_Renderer* renderer)
     SDL_RenderCopy(renderer, this->Manual, NULL, &BackgroundBox);
 }
 //Conclusion
-GameState Menu::DisplayConclusion(SDL_Renderer* renderer, bool win, GameState currentstate)
+GameState Menu::DisplayConclusion(SDL_Renderer* renderer, bool win, GameState currentstate, AudioSet& Audio)
 {
     // Add Reason of death
     if (win == true)
@@ -236,15 +248,18 @@ GameState Menu::DisplayConclusion(SDL_Renderer* renderer, bool win, GameState cu
                 {
                     if (mouseY > 390 && mouseY < 485)
                     {
+                        Audio.PlayButton();
                         return currentstate;
                     }
                     else if (mouseY > 540 && mouseY < 630)
                     {
+                        Audio.PlayButton();
                         return MainMenu;
                     }
                 }
             }
         }
+        SDL_Delay(16);
     }
     return Exit;
 }

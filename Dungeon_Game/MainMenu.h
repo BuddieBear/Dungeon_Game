@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Basis.h"
-#include "GameRunner.h"
+#include "SDL_Utils.h"
+#include "AudioSet.h"
 
 class Menu 
 {
@@ -22,20 +23,20 @@ private:
     SDL_Texture* Manual;
 
     //Conclusion
-    string ReasonOfDeath;
     SDL_Rect DeathReason;
     SDL_Texture* Winner;
     SDL_Texture* Loser;
+
     
 public:
     Menu(SDL_Renderer* renderer);
     ~Menu();
 
-    GameState ShowMainMenu(SDL_Renderer* renderer); // Displays Main Menu, return GameState
-    GameState ShowSelectStage(SDL_Renderer* renderer);
-    GameState ShowHelpMenu(SDL_Renderer* renderer);
+    GameState ShowMainMenu(SDL_Renderer* renderer, AudioSet& Audio); // Displays Main Menu, return GameState
+    GameState ShowSelectStage(SDL_Renderer* renderer, AudioSet& Audio);
+    GameState ShowHelpMenu(SDL_Renderer* renderer, AudioSet& Audio);
     // Add Conclusion Menu
-    GameState DisplayConclusion(SDL_Renderer* renderer, bool win, GameState current);
+    GameState DisplayConclusion(SDL_Renderer* renderer, bool win, GameState current, AudioSet& Audio);
 private: 
     SDL_Texture* RenderText(SDL_Renderer* renderer, const std::string& text, SDL_Color color);
     void RenderMainMenu(SDL_Renderer* renderer, int Index);
