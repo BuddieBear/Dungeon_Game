@@ -336,7 +336,7 @@ void Player::Check_Collision(int x_plus, int y_plus, vector<vector<int>>& Collid
     int tile_y = new_y / TILE_SIZE;
 
     // Create the hitbox for the new position BEFORE moving
-    SDL_Rect NewHitbox = { new_x - 24 / 2, new_y - 36 / 2, 24, 36 };
+    SDL_Rect NewHitbox = { new_x, new_y - 36/2, 24, 36 };
     
     // Check collision BEFORE updating the position
     if (Check_Surrounding_Player(NewHitbox, tile_x, tile_y, ColliderMap, Audio)) 

@@ -60,18 +60,30 @@ void RenderStage(SDL_Renderer* renderer,const vector<vector<int>>& tileMap, cons
 
     destRect.w = TILE_SIZE;
     destRect.h = TILE_SIZE;
+
     //Top-left cord
-    int x0 = (player.x - SCREEN_WIDTH/2) / TILE_SIZE ;
-    int y0 = (player.y - SCREEN_HEIGHT/2) / TILE_SIZE ;
+    int x_tl = player.x - SCREEN_WIDTH / 2;
+	int y_tl = player.y - SCREEN_HEIGHT / 2;
+
+    //Top-left tile
+    int x0 = x_tl / TILE_SIZE;
+    int y0 = y_tl / TILE_SIZE;
+
+	int x0_cord = x0 * TILE_SIZE;
+    int y0_cord = y0 * TILE_SIZE;
+
+	//Top-left tile on screen
+	int x0_screen = x0_cord - x_tl;
+	int y0_screen = y0_cord - y_tl;
 
     //Res 800x600
-    for (int y = 0; y < SCREEN_HEIGHT/TILE_SIZE +1; y++)  // only need to render 25 width x 20 height
+    for (int y = 0; y <= SCREEN_HEIGHT/TILE_SIZE + 1; y++)
     {
-        for (int x = 0; x < SCREEN_WIDTH/TILE_SIZE +1; x++) 
+        for (int x = 0; x <= SCREEN_WIDTH/TILE_SIZE +1; x++) 
         {
             // Get the location for the tile on SCREEN
-            destRect.x = x * TILE_SIZE;
-            destRect.y = y * TILE_SIZE;
+            destRect.x = x0_screen + x * TILE_SIZE;
+            destRect.y = y0_screen + y * TILE_SIZE;
 
             if (SDL_RenderCopy(renderer, TileTextures[ tileMap[y+y0][x+x0]% TileCount ], NULL, &destRect) != 0)
             {
@@ -88,9 +100,21 @@ void RenderCollider(SDL_Renderer* renderer, const vector<vector<int>>& tileMap, 
 
     destRect.w = TILE_SIZE;
     destRect.h = TILE_SIZE;
+
     //Top-left cord
-    int x0 = (player.x - SCREEN_WIDTH / 2) / TILE_SIZE ;
-    int y0 = (player.y - SCREEN_HEIGHT / 2) / TILE_SIZE ;
+    int x_tl = player.x - SCREEN_WIDTH / 2;
+    int y_tl = player.y - SCREEN_HEIGHT / 2;
+
+    //Top-left tile
+    int x0 = x_tl / TILE_SIZE;
+    int y0 = y_tl / TILE_SIZE;
+
+    int x0_cord = x0 * TILE_SIZE;
+    int y0_cord = y0 * TILE_SIZE;
+
+    //Top-left tile on screen
+    int x0_screen = x0_cord - x_tl;
+    int y0_screen = y0_cord - y_tl;
 
     //Res 800x600
     for (int y = 0; y < SCREEN_HEIGHT / TILE_SIZE + 1; y++)  // only need to render 25 width x 20 height
@@ -100,8 +124,8 @@ void RenderCollider(SDL_Renderer* renderer, const vector<vector<int>>& tileMap, 
             if (tileMap[y + y0][x + x0] != 1 && tileMap[y + y0][x + x0] != 0)
             {
                 // Get the location for the tile on SCREEN
-                destRect.x = x * TILE_SIZE;
-                destRect.y = y * TILE_SIZE;
+                destRect.x = x0_screen + x * TILE_SIZE;
+                destRect.y = y0_screen + y * TILE_SIZE;
 
                 if (SDL_RenderCopy(renderer, TileTextures[tileMap[y + y0][x + x0] % TileCount], NULL, &destRect) != 0)
                 {
